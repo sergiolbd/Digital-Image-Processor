@@ -40,5 +40,3 @@ while True:
           print(imarray)
         else:
           print ('Error: El fichero ' + filename + 'no es una imagen') 
-
-
