@@ -1,24 +1,24 @@
 import PySimpleGUI as sg  
 from PIL import Image
 import numpy as np
-    
+
+from monochrome import escala_de_grises
+
 sg.SetOptions(element_padding=(0, 0))      
 
 # ------ Menu Definition ------ #      
 menu_def = [['File', ['Open', 'Save', 'Exit'  ]],      
-            ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],      
+            ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo', 'Monochrome'], ],      
             ['Help', 'About...'], ]      
 
 # ------ GUI Defintion ------ #      
 layout = [      
     [sg.Menu(menu_def, )],      
     [sg.Output(size=(60, 20))],
-    [sg.Image(key="-IMAGE-")],
+    [sg.Image(key="-IMAGE-"), sg.Image(key="-BW-")],
           ]      
 
-window = sg.Window("Image viewer VPC", layout, default_element_size=(12, 1), auto_size_text=False, auto_size_buttons=False,      
-                    default_button_element_size=(12, 1))      
-
+window = sg.Window("Image viewer VPC", layout)
 # ------ Loop & Process button menu choices ------ #      
 while True:      
     event, values = window.read()      
@@ -40,5 +40,6 @@ while True:
           print(imarray)
         else:
           print ('Error: El fichero ' + filename + 'no es una imagen') 
-
-
+    elif event == 'Monochrome': # Convertir en blanco y negro
+        filename2 = escala_de_grises(filename)
+        window["-BW-"].update(filename=filename2)
