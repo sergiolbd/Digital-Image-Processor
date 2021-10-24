@@ -4,5 +4,7 @@
 Ficheros en funcionamiento: 
 * interface.py
 * monochrome
+* histogram
 
-Warning al pasar a blanco y negro
+
+Arreglar que a las funciones le estamos pasando la propia imagen en lugar del array en el que se carga dicha imagen al abrirla
