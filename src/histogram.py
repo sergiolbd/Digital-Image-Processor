@@ -1,7 +1,8 @@
+from itertools import accumulate
 from PIL import Image
 import matplotlib.pyplot as plot
 
-def histogram(image, normalized):
+def histogram(image, normalized, cumulative):
   # #Abrimos la Imagen
   im = Image.open(image)
   rgb_im = im.convert('RGB')
@@ -11,6 +12,8 @@ def histogram(image, normalized):
   y = im.size[1]
 
   hist = [0 for i in range(256)]
+  histNormalized = [0 for i in range(256)]
+
   eje_x = range(256)
 
   i = 0
@@ -24,25 +27,52 @@ def histogram(image, normalized):
           j += 1
       i += 1
 
-  if normalized == False: 
-     # print(hist)
+  #Normalizar el histograma
+  for i in range(256):
+    histNormalized[i] = hist[i]/(x*y)
+  
+
+  if normalized == False and cumulative == False: 
+
     plot.bar(eje_x, hist)
     plot.xlabel('[0-255]')
     plot.ylabel('Frecuencia absoluta')
     plot.title('Histrograma' + image)
     plot.show()
 
-  else: 
-    #Normalizar el histograma
+  elif normalized == True and cumulative == False: 
+
+    plot.bar(eje_x, histNormalized)
+    plot.xlabel('[0-255]')
+    plot.ylabel('Frecuencia absoluta')
+    plot.title('Histrograma normalizado' + image)
+    plot.show()
+
+  elif normalized == False and cumulative == True: 
+ 
     for i in range(256):
-      hist[i] = hist[i]/(x*y)
-
-    # print(hist)
-
-    # A partir de aquí preguntar como construir el histograma usando el array hist[] que contiene las frecuencias relativas
+      if i-1 >= 0:
+        hist[i] += hist[i-1]
+      else:
+          hist[i] = hist[i]
 
     plot.bar(eje_x, hist)
     plot.xlabel('[0-255]')
     plot.ylabel('Frecuencia absoluta')
-    plot.title('Histrograma normalizado' + image)
+    plot.title('Histrograma acumulado' + image)
+    plot.show()
+
+  elif normalized == True and cumulative == True: 
+   
+    for i in range(256):
+      if i-1 > 0:
+        histNormalized[i] += histNormalized[i-1]
+      else:
+          histNormalized[i] = histNormalized[i]
+
+
+    plot.bar(eje_x, histNormalized)
+    plot.xlabel('[0-255]')
+    plot.ylabel('Frecuencia absoluta')
+    plot.title('Histrograma normalizado acumulado' + image)
     plot.show()

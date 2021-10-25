@@ -13,7 +13,7 @@ sg.SetOptions(element_padding=(0, 0))
 # ------ Menu Definition ------ #      
 menu_def = [['File', ['Open', 'Save', 'Exit'  ]],      
             ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo', 'Monochrome'], ],
-            ['Tools', ['Histogram', 'Normalized Histogram']],      
+            ['Tools', ['Histogram', 'Normalized Histogram', 'Cumulative Histogram', 'Cumulative Normalized Histogram']],      
             ['Help', 'About...'], ]      
 
 # ------ GUI Defintion ------ #      
@@ -62,7 +62,13 @@ while True:
         plot.show()
 
     elif event == 'Histogram': 
-        histogram(filename, False)
+        histogram(filename, False, False)
 
     elif event == 'Normalized Histogram': 
-        histogram(filename, True)
+        histogram(filename, True, False)
+
+    elif event == 'Cumulative Histogram': 
+        histogram(filename, False, True)
+
+    elif event == 'Cumulative Normalized Histogram': 
+        histogram(filename, True, True)
