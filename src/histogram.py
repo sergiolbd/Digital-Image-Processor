@@ -40,6 +40,8 @@ def histogram(image, normalized, cumulative):
     plot.title('Histrograma' + image)
     plot.show()
 
+    return hist
+
   elif normalized == True and cumulative == False: 
 
     plot.bar(eje_x, histNormalized)
