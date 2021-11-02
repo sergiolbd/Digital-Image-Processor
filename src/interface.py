@@ -1,83 +1,83 @@
-from traceback import print_tb
-import PySimpleGUI as sg  
-from PIL import Image
-import numpy as np 
-import matplotlib.pyplot as plot
+import sys
+from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication
 
-from monochrome import escala_de_grises
-from newmonochrome import grayConversion
-from histogram import histogram
-from brightness import brightness
-
-sg.SetOptions(element_padding=(0, 0))  
-
-# ------ Menu Definition ------ #      
-menu_def = [['File', ['Open', 'Save', 'Exit'  ]],      
-            ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo', 'Monochrome'], ],
-            ['Tools', ['Histogram', 'Normalized Histogram', 'Cumulative Histogram', 'Cumulative Normalized Histogram', 'Brightness']],      
-            ['Help', 'About...'], ]      
-
-# ------ GUI Defintion ------ #      
-layout = [      
-    [sg.Menu(menu_def)],      
-    [sg.Output(size=(60, 20))],
-    [sg.Image(key="-IMAGE-"), sg.Image(key="-BW-")],
-          ]      
-
-window = sg.Window("Image viewer VPC", layout, resizable=True)
-# ------ Loop & Process button menu choices ------ #      
-while True:      
-    event, values = window.read()      
-    if event == sg.WIN_CLOSED or event == 'Exit':      
-        break      
-    print('Button = ', event)      
-    # ------ Process menu choices ------ #      
-    if event == 'About...':      
-        sg.popup('About this program', 'Version 1.0', 'PySimpleGUI rocks...')      
-    elif event == 'Open':     # Abrir imagen 
-        filename = sg.popup_get_file('file to open', no_window=True) 
-
-        if filename.lower().endswith((".jpg", ".tif")) :
-            img_png = Image.open(filename)
-            img_png.save(filename, format="PNG")
-
-        # window["-IMAGE-"].update(filename=filename)  
-        sg.popup_no_buttons('Text', title="Über uns", text_color=('#F7F6F2'), keep_on_top=True, image=filename)
-
-
-        # Convertimos imagen en una matriz
-        im = Image.open(filename)
-        print(im.size, im.mode, im.format)
-        imarray = np.asarray(im)
-        print(imarray.shape)
-        # Convertimos array a imagen nuevamente
-        file = Image.fromarray(imarray)
+class basicMenubar(QMainWindow):
     
-        # Mostramos en ventana externa donde permite ver la posición de cada pixel y su valor RGB
-        # plot.imshow(imarray)
-        # plot.show()
-       
-    elif event == 'Monochrome': # Convertir en blanco y negro
-        # filename2 = escala_de_grises(filename)
-        # window["-BW-"].update(filename=filename2)
-        newBlack = grayConversion(imarray)
-        plot.axis('off')
-        # plot.imshow(newBlack, origin="lower")
-        plot.imshow(newBlack, interpolation='nearest')
-        plot.show()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)        
+        
+        self.initUI()        
+        
+    def initUI(self):    
+        
+        self.setGeometry(400, 400, 400, 400)
 
-    elif event == 'Histogram': 
-        hist = histogram(filename, False, False)
+        openAction = QAction('&Open', self)        
+        openAction.setShortcut('Ctrl+O')
+        openAction.setStatusTip('Open Imagen')
+        openAction.triggered.connect(qApp.applicationFilePath)           
+        
+        exitAction = QAction('&Exit', self)        
+        exitAction.setShortcut('Ctrl+Q')
+        exitAction.setStatusTip('Exit application')
+        exitAction.triggered.connect(qApp.quit)
 
-    elif event == 'Normalized Histogram': 
-        histogram(filename, True, False)
+        self.statusBar()
 
-    elif event == 'Cumulative Histogram': 
-        histogram(filename, False, True)
+        menubar = self.menuBar()
+        fileMenu = menubar.addMenu('&File')
+        fileMenu.addAction(exitAction)
+        fileMenu.addAction(openAction)
 
-    elif event == 'Cumulative Normalized Histogram': 
-        histogram(filename, True, True)
+        #---------------------------------------------
 
-    elif event == 'Brightness':
-        brillo = brightness(hist, imarray.shape)
-        print(brillo)
+        copyAction = QAction('&Copy', self)        
+        copyAction.setShortcut('Ctrl+C')
+        copyAction.setStatusTip('Copy Imagen')
+        copyAction.triggered.connect(qApp.applicationFilePath)           
+        
+        ROIAction = QAction('&Region of Interest', self)        
+        ROIAction.setShortcut('Ctrl+R')
+        ROIAction.setStatusTip('Select a ROI in Image')
+        ROIAction.triggered.connect(qApp.quit)
+
+        menubar2 = self.menuBar()
+        fileMenu2 = menubar2.addMenu('&Edit')
+        fileMenu2.addAction(copyAction)
+        fileMenu2.addAction(ROIAction)
+
+        #---------------------------------------------
+
+        showAction = QAction('&Show info', self)        
+        showAction.setStatusTip('Show info Imagen')
+        showAction.triggered.connect(qApp.applicationFilePath)           
+        
+        brightAction = QAction('&Brightness/Contranst', self)        
+        brightAction.triggered.connect(qApp.quit)
+
+        menubar3 = self.menuBar()
+        fileMenu3 = menubar3.addMenu('&Image')
+        fileMenu3.addAction(showAction)
+        fileMenu3.addAction(brightAction)
+        
+        #---------------------------------------------
+
+        aboutAction = QAction('&About', self)        
+        aboutAction.triggered.connect(qApp.quit)
+
+        menubar4 = self.menuBar()
+        fileMenu4 = menubar4.addMenu('&Help')
+        fileMenu4.addAction(aboutAction)
+
+        #---------------------------------------------
+        
+        self.setWindowTitle('Procesamiento digital de imágenes')    
+        self.show()
+        
+        
+if __name__ == '__main__':
+    
+    app = QApplication(sys.argv)
+    ex = basicMenubar()
+    sys.exit(app.exec_())
+
