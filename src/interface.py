@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget
+from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu
 from openImage import SelectFileWindow
 from PyQt5.QtGui import QPixmap, QImage
 from PIL import Image
@@ -14,7 +14,9 @@ class basicMenubar(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
         
-        self.initUI()        
+        self.initUI() 
+        self.openImages = []  # Rutas de imagenes abiertas
+        self.openRgb = []   # RGB de cada imagen
         
     def initUI(self):    
         
@@ -24,9 +26,7 @@ class basicMenubar(QMainWindow):
         openAction = QAction('&Open', self)        
         openAction.setShortcut('Ctrl+O')
         openAction.setStatusTip('Open Imagen')
-        # openAction.triggered.connect(qApp.applicationFilePath) 
         openAction.triggered.connect(self.seleccionar_archivo)
-                
         
         exitAction = QAction('&Exit', self)        
         exitAction.setShortcut('Ctrl+Q')
@@ -35,8 +35,8 @@ class basicMenubar(QMainWindow):
 
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(exitAction)
         fileMenu.addAction(openAction)
+        fileMenu.addAction(exitAction)
 
         #---------------------------------------------
 
@@ -56,16 +56,36 @@ class basicMenubar(QMainWindow):
 
         #---------------------------------------------
 
-        showAction = QAction('&Histograma', self)        
-        showAction.setStatusTip('Histograma de la imagen seleccionada')
-        showAction.triggered.connect(self.abrirHistograma)           
-        
         brightAction = QAction('&Brightness/Contranst', self)        
         brightAction.triggered.connect(qApp.quit)
 
         menubar3 = self.menuBar()
         fileMenu3 = menubar3.addMenu('&Image')
-        fileMenu3.addAction(showAction)
+        new_submenu = QMenu('Histograma', self)
+        
+        submenu_noacumulado = QMenu('No acumulado', self)
+        submenu_acum = QMenu('Acumulado', self)
+
+        # Histograma no acumulado
+
+        first_action = QAction('No normalizado')
+        first_action.triggered.connect(self.abrirHistograma(False, False)) 
+        second_action = QAction('Normalizado')
+
+        submenu_noacumulado.addAction(first_action)
+        submenu_noacumulado.addAction(second_action)
+        new_submenu.addMenu(submenu_noacumulado)
+
+        # Histograma acumulado
+
+        third_action = QAction('No normalizado', self)
+        fourth_action = QAction('Normalizado', self)
+        
+        submenu_acum.addAction(third_action)
+        submenu_acum.addAction(fourth_action)
+        new_submenu.addMenu(submenu_acum)
+        
+        fileMenu3.addMenu(new_submenu)
         fileMenu3.addAction(brightAction)
         
         #---------------------------------------------
@@ -84,30 +104,25 @@ class basicMenubar(QMainWindow):
         
     def seleccionar_archivo(self):
         # Obtenemos la ruta de la image a abrir
-        filename, ok = QFileDialog.getOpenFileName(self, 'Select Image...')
-        
-        print(filename)
-        img = cv2.imread(filename) 
-        rgb = np.asarray(img)
+        fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...')
+        self.openImages.append(fileImage)
+        print(self.openImages[-1])
+        imagen = cv2.imread(self.openImages[-1]) 
+        self.openRgb.append(np.asarray(imagen))
         # Mostramos en ventana externa donde permite ver la posición de cada pixel y su valor RGB
-        cv2.imshow(filename, rgb)
+        cv2.imshow(self.openImages[-1], self.openRgb[-1])
         
-    def abrirHistograma(self):
-        filename, ok = QFileDialog.getOpenFileName(self, 'Select Image...')
-        histogram(filename, False, False)
+    def abrirHistograma(self, normalized, cumulative):
+        pos = -1 # Imagen que se a seleccionado
+        print(self.openImages[-1])
+        #histogram(self.openImages[pos], normalized, cumulative)
 
     def blancoYnegro(self):
-        filename, ok = QFileDialog.getOpenFileName(self, 'Select Image...')
-        img = cv2.imread(filename) 
-        rgb = np.asarray(img)
-        gray = grayConversion(rgb)
-        cv2.imshow(filename, gray)
+        pos = -1 # Imagen que se a seleccionado
+        gray = grayConversion(self.openRgb[pos])
+
+        cv2.imshow(self.openImages[pos] + 'gray', gray)
         
 
-        
-# if __name__ == '__main__':
-    
-#     app = QApplication(sys.argv)
-#     ex = basicMenubar()
-#     sys.exit(app.exec_())
+
 
