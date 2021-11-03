@@ -5,6 +5,8 @@ from PIL import Image
 import numpy as np
 import cv2 
 import matplotlib.pyplot as plot
+from histogram import histogram
+from newmonochrome import grayConversion
 
 
 class basicMenubar(QMainWindow):
@@ -38,10 +40,9 @@ class basicMenubar(QMainWindow):
 
         #---------------------------------------------
 
-        copyAction = QAction('&Copy', self)        
-        copyAction.setShortcut('Ctrl+C')
-        copyAction.setStatusTip('Copy Imagen')
-        copyAction.triggered.connect(qApp.applicationFilePath)           
+        copyAction = QAction('&Black', self)        
+        copyAction.setStatusTip('Blanco y negro')
+        copyAction.triggered.connect(self.blancoYnegro)           
         
         ROIAction = QAction('&Region of Interest', self)        
         ROIAction.setShortcut('Ctrl+R')
@@ -55,9 +56,9 @@ class basicMenubar(QMainWindow):
 
         #---------------------------------------------
 
-        showAction = QAction('&Show info', self)        
-        showAction.setStatusTip('Show info Imagen')
-        showAction.triggered.connect(qApp.applicationFilePath)           
+        showAction = QAction('&Histograma', self)        
+        showAction.setStatusTip('Histograma de la imagen seleccionada')
+        showAction.triggered.connect(self.abrirHistograma)           
         
         brightAction = QAction('&Brightness/Contranst', self)        
         brightAction.triggered.connect(qApp.quit)
@@ -85,25 +86,23 @@ class basicMenubar(QMainWindow):
         # Obtenemos la ruta de la image a abrir
         filename, ok = QFileDialog.getOpenFileName(self, 'Select Image...')
         
-        #if filename.lower().endswith((".jpg", ".tif")) :
-        #    img_png = Image.open(filename)
-        #    img_png.save(filename, format="PNG")
-        
-        # Abre la imagen
-        #im = Image.open(filename)
-        #print(im.size, im.mode, im.format)
-        #Extraemos el array de la imagen
-        #imarray = np.asarray(im)
-        #print(imarray.shape)
-        # Convertimos array a imagen nuevamente
-        #file = Image.fromarray(imarray)
-
+        print(filename)
         img = cv2.imread(filename) 
         rgb = np.asarray(img)
         # Mostramos en ventana externa donde permite ver la posición de cada pixel y su valor RGB
         cv2.imshow(filename, rgb)
         
+    def abrirHistograma(self):
+        filename, ok = QFileDialog.getOpenFileName(self, 'Select Image...')
+        histogram(filename, False, False)
 
+    def blancoYnegro(self):
+        filename, ok = QFileDialog.getOpenFileName(self, 'Select Image...')
+        img = cv2.imread(filename) 
+        rgb = np.asarray(img)
+        gray = grayConversion(rgb)
+        cv2.imshow(filename, gray)
+        
 
         
 # if __name__ == '__main__':

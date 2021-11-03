@@ -16,13 +16,17 @@ def grayConversion(imarray):
             b = imarray[i][j][2]
             grayValue = r * 0.299 + g * 0.587 + b * 0.114
             gris = int(grayValue)
-            pixel = tuple([gris, gris, gris])
-            im2.putpixel((i,j), pixel)
+            imarray[i][j][0] = gris
+            imarray[i][j][1] = gris
+            imarray[i][j][2] = gris
+            #gris = int(grayValue)
+            #pixel = tuple([gris, gris, gris])
+            #im2.putpixel((i,j), pixel)
     
-    imarray2 = np.asarray(im2)
+    #imarray2 = np.asarray(im2)
     # print(imarray.shape)
 
 
-    return imarray2
+    return imarray
     # plot.imshow(imarray, cmap='gray')
     # plot.show()
