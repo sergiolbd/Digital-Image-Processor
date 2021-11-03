@@ -1,5 +1,11 @@
-import sys
-from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication
+from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget
+from openImage import SelectFileWindow
+from PyQt5.QtGui import QPixmap
+from PIL import Image
+import numpy as np
+import cv2 
+import matplotlib.pyplot as plot
+
 
 class basicMenubar(QMainWindow):
     
@@ -11,18 +17,19 @@ class basicMenubar(QMainWindow):
     def initUI(self):    
         
         self.setGeometry(400, 400, 400, 400)
+        self.statusBar()
 
         openAction = QAction('&Open', self)        
         openAction.setShortcut('Ctrl+O')
         openAction.setStatusTip('Open Imagen')
-        openAction.triggered.connect(qApp.applicationFilePath)           
+        # openAction.triggered.connect(qApp.applicationFilePath) 
+        openAction.triggered.connect(self.seleccionar_archivo)
+                
         
         exitAction = QAction('&Exit', self)        
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Exit application')
         exitAction.triggered.connect(qApp.quit)
-
-        self.statusBar()
 
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
@@ -74,10 +81,31 @@ class basicMenubar(QMainWindow):
         self.setWindowTitle('Procesamiento digital de imágenes')    
         self.show()
         
+    def seleccionar_archivo(self):
+        # Obtenemos la ruta de la image a abrir
+        filename, ok = QFileDialog.getOpenFileName(self, 'Select Image...')
         
-if __name__ == '__main__':
+        # Abre la imagen
+        im = Image.open(filename)
+        print(im.size, im.mode, im.format)
+        #Extraemos el array de la imagen
+        imarray = np.asarray(im)
+        print(imarray.shape)
+        # Convertimos array a imagen nuevamente
+        file = Image.fromarray(imarray)
+
+        # Mostramos en ventana externa donde permite ver la posición de cada pixel y su valor RGB
+        #plot.imshow(imarray)
+        #plot.show()
+
+        cv2.imshow('RGB', imarray)
+        cv2.waitKey(0)
+
+
+        
+# if __name__ == '__main__':
     
-    app = QApplication(sys.argv)
-    ex = basicMenubar()
-    sys.exit(app.exec_())
+#     app = QApplication(sys.argv)
+#     ex = basicMenubar()
+#     sys.exit(app.exec_())
 
