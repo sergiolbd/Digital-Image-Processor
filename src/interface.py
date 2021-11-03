@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget
 from openImage import SelectFileWindow
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QImage
 from PIL import Image
 import numpy as np
 import cv2 
@@ -85,21 +85,24 @@ class basicMenubar(QMainWindow):
         # Obtenemos la ruta de la image a abrir
         filename, ok = QFileDialog.getOpenFileName(self, 'Select Image...')
         
+        #if filename.lower().endswith((".jpg", ".tif")) :
+        #    img_png = Image.open(filename)
+        #    img_png.save(filename, format="PNG")
+        
         # Abre la imagen
-        im = Image.open(filename)
-        print(im.size, im.mode, im.format)
+        #im = Image.open(filename)
+        #print(im.size, im.mode, im.format)
         #Extraemos el array de la imagen
-        imarray = np.asarray(im)
-        print(imarray.shape)
+        #imarray = np.asarray(im)
+        #print(imarray.shape)
         # Convertimos array a imagen nuevamente
-        file = Image.fromarray(imarray)
+        #file = Image.fromarray(imarray)
 
+        img = cv2.imread(filename) 
+        rgb = np.asarray(img)
         # Mostramos en ventana externa donde permite ver la posición de cada pixel y su valor RGB
-        #plot.imshow(imarray)
-        #plot.show()
-
-        cv2.imshow('RGB', imarray)
-        cv2.waitKey(0)
+        cv2.imshow(filename, rgb)
+        
 
 
         
