@@ -63,23 +63,25 @@ class basicMenubar(QMainWindow):
         fileMenu3 = menubar3.addMenu('&Image')
         new_submenu = QMenu('Histograma', self)
         
-        submenu_noacumulado = QMenu('No acumulado', self)
-        submenu_acum = QMenu('Acumulado', self)
-
         # Histograma no acumulado
+        submenu_noacumulado = QMenu('No acumulado', self)
 
-        first_action = QAction('No normalizado')
-        first_action.triggered.connect(self.abrirHistograma(False, False)) 
-        second_action = QAction('Normalizado')
+        first_action = QAction('No normalizado', self)
+        first_action.triggered.connect(self.abrirHistograma) 
+        second_action = QAction('Normalizado', self)
+        second_action.triggered.connect(self.abrirHistogramaN) 
 
         submenu_noacumulado.addAction(first_action)
         submenu_noacumulado.addAction(second_action)
         new_submenu.addMenu(submenu_noacumulado)
 
         # Histograma acumulado
+        submenu_acum = QMenu('Acumulado', self)
 
         third_action = QAction('No normalizado', self)
+        third_action.triggered.connect(self.abrirHistogramaA) 
         fourth_action = QAction('Normalizado', self)
+        fourth_action.triggered.connect(self.abrirHistogramaNA) 
         
         submenu_acum.addAction(third_action)
         submenu_acum.addAction(fourth_action)
@@ -112,10 +114,17 @@ class basicMenubar(QMainWindow):
         # Mostramos en ventana externa donde permite ver la posición de cada pixel y su valor RGB
         cv2.imshow(self.openImages[-1], self.openRgb[-1])
         
-    def abrirHistograma(self, normalized, cumulative):
-        pos = -1 # Imagen que se a seleccionado
-        print(self.openImages[-1])
-        #histogram(self.openImages[pos], normalized, cumulative)
+    def abrirHistograma(self):
+        histogram(self.openImages[-1], False, False)
+
+    def abrirHistogramaN(self):
+        histogram(self.openImages[-1], True, False)
+
+    def abrirHistogramaA(self):
+        histogram(self.openImages[-1], False, True)
+
+    def abrirHistogramaNA(self):
+        histogram(self.openImages[-1], True, True)
 
     def blancoYnegro(self):
         pos = -1 # Imagen que se a seleccionado

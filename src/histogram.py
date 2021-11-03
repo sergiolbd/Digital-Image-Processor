@@ -37,7 +37,7 @@ def histogram(image, normalized, cumulative):
     plot.bar(eje_x, hist)
     plot.xlabel('[0-255]')
     plot.ylabel('Frecuencia absoluta')
-    plot.title('Histrograma' + image)
+    plot.title('Histrograma')
     plot.show()
 
     return hist
@@ -47,7 +47,7 @@ def histogram(image, normalized, cumulative):
     plot.bar(eje_x, histNormalized)
     plot.xlabel('[0-255]')
     plot.ylabel('Frecuencia absoluta')
-    plot.title('Histrograma normalizado' + image)
+    plot.title('Histrograma normalizado')
     plot.show()
 
   elif normalized == False and cumulative == True: 
@@ -61,7 +61,7 @@ def histogram(image, normalized, cumulative):
     plot.bar(eje_x, hist)
     plot.xlabel('[0-255]')
     plot.ylabel('Frecuencia absoluta')
-    plot.title('Histrograma acumulado' + image)
+    plot.title('Histrograma acumulado')
     plot.show()
 
   elif normalized == True and cumulative == True: 
@@ -76,5 +76,5 @@ def histogram(image, normalized, cumulative):
     plot.bar(eje_x, histNormalized)
     plot.xlabel('[0-255]')
     plot.ylabel('Frecuencia absoluta')
-    plot.title('Histrograma normalizado acumulado' + image)
+    plot.title('Histrograma normalizado acumulado')
     plot.show()
