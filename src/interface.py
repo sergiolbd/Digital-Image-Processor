@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox
 from openImage import SelectFileWindow
 from PyQt5.QtGui import QPixmap, QImage
 from PIL import Image
@@ -7,6 +8,8 @@ import cv2
 import matplotlib.pyplot as plot
 from histogram import histogram
 from newmonochrome import grayConversion
+from brightness import brightness
+from contraste import contrast
 
 
 class basicMenubar(QMainWindow):
@@ -17,6 +20,8 @@ class basicMenubar(QMainWindow):
         self.initUI() 
         self.openImages = []  # Rutas de imagenes abiertas
         self.openRgb = []   # RGB de cada imagen
+        self.hist = []
+        self.gray = [] # Lista para almacenar el array de la imagen en blanco y negro
         
     def initUI(self):    
         
@@ -115,33 +120,45 @@ class basicMenubar(QMainWindow):
         # Obtenemos la ruta de la image a abrir
         fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
         self.openImages.append(fileImage)
-        print(self.openImages[-1])
-        imagen = cv2.imread(self.openImages[-1]) 
-        self.openRgb.append(np.asarray(imagen))
+        imagen = cv2.imread(self.openImages[-1])
+        imarray = np.asarray(imagen)
+        # Al abrir la imagen obtenemos su version B&W la cual se usará para todas las operaciones, y su hist
+        self.gray.append(grayConversion(imarray))
+        self.hist.append(histogram(self.gray[-1], True, True, False))
         # Mostramos en ventana externa donde permite ver la posición de cada pixel y su valor RGB
-        cv2.imshow(self.openImages[-1], self.openRgb[-1])
+        cv2.imshow(self.openImages[-1], imarray)
+
+        # imagen = QImage(self.openImages[-1])
+        # img = QLabel(fileImage)
+        # img.setPixmap(QPixmap.fromImage(imagen))
+        # item = QDockWidget(fileImage, self)
+        # item.setWidget(img)
+        # self.addDockWidget(QtCore.Qt.DockWidgetArea.LeftDockWidgetArea, item)
         
     def abrirHistograma(self, normalized, cumulative):
-        histogram(self.openImages[-1], normalized, cumulative)
+        histogram(self.gray[-1], normalized, cumulative, True)
 
     def blancoYnegro(self):
-        pos = -1 # Imagen que se a seleccionado
-        gray = grayConversion(self.openRgb[pos])
-        self.openRgb.append(gray)
-
-        cv2.imshow(self.openImages[pos] + 'gray', gray)
+        cv2.imshow(self.openImages[-1] + 'gray', self.gray[-1])
 
     def show_info(self):
-        imarray = self.openRgb[-1]
+        imarray = self.gray[-1]
         im = Image.open(self.openImages[-1])
-        size = str(imarray.shape)
-        ruta = self.openImages[-1]
+        formato = "\nTipo fichero: " + im.format
+        size = "\nTamaño: " + str(imarray.shape)
+        ruta = "\nRuta:" + self.openImages[-1]
         
         # Obtener el menor y mayor pixel (con imarray[...,0] accedemos al primer canal)
         max = str(np.max(imarray[...,0]))
         min = str(np.min(imarray[...,0]))
+        rango = "\nRango valores: ["+ min + "," + max + "]"
 
-        mensaje = "Ruta: "+ ruta + "\nTipo de fichero: " + im.format +"\n" + "Tamaño: " + size + "\nRango valores: [" + min + "," + max + "]\n"
+        brillo = brightness(self.hist[-1], imarray.shape)
+        brillostr = "\nBrillo: " + str(brillo)
+        contraste =  contrast(self.hist[-1], imarray.shape, brillo)
+        contrastestr = "\nContraste: " + str(contraste)
+
+        mensaje = ruta + formato + size + rango + brillostr + contrastestr
         QMessageBox.about(self, "Información de la imagen", mensaje)
         
 
