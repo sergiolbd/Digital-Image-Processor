@@ -1,6 +1,6 @@
 import math
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox
+from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox, QInputDialog
 from PyQt5.QtGui import QPixmap, QImage
 from PIL import Image
 import numpy as np
@@ -11,6 +11,7 @@ from newmonochrome import grayConversion
 from brightness import brightness
 from contraste import contrast
 from entropia import entropy
+
 
 
 class basicMenubar(QMainWindow):
@@ -35,6 +36,11 @@ class basicMenubar(QMainWindow):
         openAction.setShortcut('Ctrl+O')
         openAction.setStatusTip('Open Imagen')
         openAction.triggered.connect(self.seleccionar_archivo)
+
+        ROIAction = QAction('&ROI', self)        
+        ROIAction.setShortcut('Ctrl+R')
+        ROIAction.setStatusTip('Select region of interest')
+        ROIAction.triggered.connect(self.selectROI)
         
         exitAction = QAction('&Exit', self)        
         exitAction.setShortcut('Ctrl+Q')
@@ -44,6 +50,7 @@ class basicMenubar(QMainWindow):
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(openAction)
+        fileMenu.addAction(ROIAction)
         fileMenu.addAction(exitAction)
 
         #-------------------Edit--------------------------
@@ -171,6 +178,19 @@ class basicMenubar(QMainWindow):
 
         mensaje = ruta + formato + size + rango + brillostr + contrastestr + entropiastr + numofbitsstr
         QMessageBox.about(self, "Información de la imagen", mensaje)
+
+    # Intentando hacer una selección de una region de interes sin necesidad del raton
+    def selectROI(self):
+        imarray = self.gray[-1]
+        maxX = imarray.shape[0]
+        maxY = imarray.shape[1]
+        x1, ok = QInputDialog.getInt(self, "x1", "x1:", 1, 0, maxX)
+        y1, ok = QInputDialog.getInt(self, "y1", "y1:", 1, 0, maxY)
+        x2, ok = QInputDialog.getInt(self, "x2", "x2:", 1, 0, maxX)
+        y2, ok = QInputDialog.getInt(self, "y2", "y2:", 1, 0, maxY)
+
+        imarray2 = np.zeros(imarray.shape, np.uint8)
+        
         
 
 

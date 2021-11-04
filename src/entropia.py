@@ -1,8 +1,6 @@
 # Calcular la entropía de una imagen
 
-
 import math
-
 
 def entropy(hist, size):
     # entropia = Representa el nº de bits mínimos para codificar la imagen
