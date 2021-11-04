@@ -1,6 +1,6 @@
+import math
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox
-from openImage import SelectFileWindow
 from PyQt5.QtGui import QPixmap, QImage
 from PIL import Image
 import numpy as np
@@ -10,6 +10,7 @@ from histogram import histogram
 from newmonochrome import grayConversion
 from brightness import brightness
 from contraste import contrast
+from entropia import entropy
 
 
 class basicMenubar(QMainWindow):
@@ -119,6 +120,12 @@ class basicMenubar(QMainWindow):
     def seleccionar_archivo(self):
         # Obtenemos la ruta de la image a abrir
         fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
+
+        # Transformamos a PNG para que no pierda información
+        if fileImage.lower().endswith((".jpg", ".tif")) :
+            img_png = Image.open(fileImage)
+            img_png.save(fileImage, format="PNG")
+
         self.openImages.append(fileImage)
         imagen = cv2.imread(self.openImages[-1])
         imarray = np.asarray(imagen)
@@ -157,8 +164,12 @@ class basicMenubar(QMainWindow):
         brillostr = "\nBrillo: " + str(brillo)
         contraste =  contrast(self.hist[-1], imarray.shape, brillo)
         contrastestr = "\nContraste: " + str(contraste)
+        entropia = entropy(self.hist[-1], imarray.shape)
+        entropiastr = "\nEntropia: " + str(entropia)
+        numofbits = math.ceil(entropia)
+        numofbitsstr = "\nNº de bits: " + str(numofbits)
 
-        mensaje = ruta + formato + size + rango + brillostr + contrastestr
+        mensaje = ruta + formato + size + rango + brillostr + contrastestr + entropiastr + numofbitsstr
         QMessageBox.about(self, "Información de la imagen", mensaje)
         
 

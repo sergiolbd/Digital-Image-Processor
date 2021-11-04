@@ -13,4 +13,7 @@ def brightness(hist, size):
 
     brillo = (1/(height*width)) * sumatoriohist
 
+    if brillo < 0 or brillo > 255:
+      return "Brillo erroneo, fuera del rango [0,255]"
+
     return round(brillo,3)

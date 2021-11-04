@@ -16,4 +16,7 @@ def contrast(hist, size, brillo):
 
     contraste = math.sqrt(contraste)
 
+    if contraste < 0 or contraste > 128:
+      return "Contraste erroneo, fuera del rango [0,127]"
+
     return round(contraste,3)
