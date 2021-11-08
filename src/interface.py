@@ -4,13 +4,16 @@ from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QAp
 from PyQt5.QtGui import QPixmap, QImage
 from PIL import Image
 import numpy as np
-import cv2 
+
 import matplotlib.pyplot as plot
+from numpy.lib.function_base import append
 from histogram import histogram
 from newmonochrome import grayConversion
 from brightness import brightness
 from contraste import contrast
 from entropia import entropy
+from window import Window
+import cv2
 
 
 
@@ -20,6 +23,7 @@ class basicMenubar(QMainWindow):
         super().__init__(*args, **kwargs)        
         
         self.initUI() 
+        self.windows = []
         self.openImages = []  # Rutas de imagenes abiertas
         self.openRgb = []   # RGB de cada imagen
         self.hist = []
@@ -123,55 +127,39 @@ class basicMenubar(QMainWindow):
         
         self.setWindowTitle('Procesamiento digital de imágenes')    
         self.show()
-        
+
     def seleccionar_archivo(self):
         # Obtenemos la ruta de la image a abrir
         fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
-
-        # Transformamos a PNG para que no pierda información
-        if fileImage.lower().endswith((".jpg", ".tif")) :
-            img_png = Image.open(fileImage)
-            img_png.save(fileImage, format="PNG")
-
         self.openImages.append(fileImage)
-        imagen = cv2.imread(self.openImages[-1])
-        imarray = np.asarray(imagen)
-        # Al abrir la imagen obtenemos su version B&W la cual se usará para todas las operaciones, y su hist
-        self.gray.append(grayConversion(imarray))
-        self.hist.append(histogram(self.gray[-1], True, True, False))
-        # Mostramos en ventana externa donde permite ver la posición de cada pixel y su valor RGB
-        cv2.imshow(self.openImages[-1], imarray)
-
-        # imagen = QImage(self.openImages[-1])
-        # img = QLabel(fileImage)
-        # img.setPixmap(QPixmap.fromImage(imagen))
-        # item = QDockWidget(fileImage, self)
-        # item.setWidget(img)
-        # self.addDockWidget(QtCore.Qt.DockWidgetArea.LeftDockWidgetArea, item)
         
+        self.newImagen(fileImage)
+            
     def abrirHistograma(self, normalized, cumulative):
-        histogram(self.gray[-1], normalized, cumulative, True)
+        histogram(self.windows[-1].getArray(), normalized, cumulative, True)
 
     def blancoYnegro(self):
-        cv2.imshow(self.openImages[-1] + 'gray', self.gray[-1])
+        self.windows.append(self.windows[-1])
+        ###### Cambiar nombre de la imagen
+        self.windows[-1].showImage(self, self.windows[-1].getArray())
 
     def show_info(self):
-        imarray = self.gray[-1]
+        imarray = self.windows[-1].getArray()
         im = Image.open(self.openImages[-1])
         formato = "\nTipo fichero: " + im.format
         size = "\nTamaño: " + str(imarray.shape)
-        ruta = "\nRuta:" + self.openImages[-1]
+        ruta = "\nRuta:" + self.windows[-1].getName()
         
         # Obtener el menor y mayor pixel (con imarray[...,0] accedemos al primer canal)
         max = str(np.max(imarray[...,0]))
         min = str(np.min(imarray[...,0]))
         rango = "\nRango valores: ["+ min + "," + max + "]"
 
-        brillo = brightness(self.hist[-1], imarray.shape)
+        brillo = brightness(self.windows[-1].getHist(), imarray.shape)
         brillostr = "\nBrillo: " + str(brillo)
-        contraste =  contrast(self.hist[-1], imarray.shape, brillo)
+        contraste =  contrast(self.windows[-1].getHist(), imarray.shape, brillo)
         contrastestr = "\nContraste: " + str(contraste)
-        entropia = entropy(self.hist[-1], imarray.shape)
+        entropia = entropy(self.windows[-1].getHist(), imarray.shape)
         entropiastr = "\nEntropia: " + str(entropia)
         numofbits = math.ceil(entropia)
         numofbitsstr = "\nNº de bits: " + str(numofbits)
@@ -181,7 +169,7 @@ class basicMenubar(QMainWindow):
 
     # Intentando hacer una selección de una region de interes sin necesidad del raton
     def selectROI(self):
-        imarray = self.gray[-1]
+        imarray = self.windows[-1].getArray()
         maxX = imarray.shape[0]
         maxY = imarray.shape[1]
         x1, ok = QInputDialog.getInt(self, "x1", "x1:", 1, 0, maxX)
@@ -189,7 +177,29 @@ class basicMenubar(QMainWindow):
         x2, ok = QInputDialog.getInt(self, "x2", "x2:", 1, 0, maxX)
         y2, ok = QInputDialog.getInt(self, "y2", "y2:", 1, 0, maxY)
 
-        imarray2 = np.zeros(imarray.shape, np.uint8)
+        imarray2 = np.zeros([x2-x1, y2-y1, 3], np.uint8)
+        
+        # Recorremos la imagen y generamos una nueva con la región
+        k = 0
+        for i in range(x1, x2):
+            l = 0
+            for j in range(y1, y2):
+                imarray2[k][l][0] = imarray[i][j][0]
+                imarray2[k][l][1] = imarray[i][j][1]
+                imarray2[k][l][2] = imarray[i][j][2]
+                l += 1
+            k += 1
+
+        newRoi = Window(self.windows[-1].getName() + '_ROI') ## Revisar para poner bien el nombre
+        newRoi.setArray(imarray2)
+        self.windows.append(newRoi)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
+
+    def newImagen(self, nameImage):
+        new = Window(nameImage)
+        new.newWindow(self)
+        self.windows.append(new)
         
         
 
