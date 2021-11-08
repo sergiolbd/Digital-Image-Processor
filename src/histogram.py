@@ -44,7 +44,7 @@ def histogram(imagearray, normalized, cumulative, show):
       plot.title('Histrograma normalizado')
       plot.show()
 
-    elif normalized == False and cumulative == True: 
+    elif normalized == False and cumulative: 
   
       for i in range(256):
         if i-1 >= 0:
@@ -58,11 +58,11 @@ def histogram(imagearray, normalized, cumulative, show):
       plot.title('Histrograma acumulado')
       plot.show()
 
-    elif normalized == True and cumulative == True: 
+    elif normalized and cumulative: 
     
       for i in range(256):
-        if i-1 > 0:
-          histNormalized[i] += histNormalized[i-1]
+        if i - 1 > 0:
+          histNormalized[i] += histNormalized[i - 1]
         else:
             histNormalized[i] = histNormalized[i]
 

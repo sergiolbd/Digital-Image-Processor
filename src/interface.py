@@ -24,6 +24,7 @@ class basicMenubar(QMainWindow):
         
         self.initUI() 
         self.windows = []
+        #self.windows2 = ("name": window) /// self.windows2["nombre ventana"] = window
         self.openImages = []  # Rutas de imagenes abiertas
         self.openRgb = []   # RGB de cada imagen
         self.hist = []
