@@ -26,7 +26,6 @@ class Window(): # Añadir Qwindow para hacer el onClick
         if self.nameImage.lower().endswith((".jpg", ".tif")) :
             img_png = Image.open(self.nameImage)
             img_png.save(self.nameImage, format="PNG")
-            print('1')
             
         imge = cv2.imread(self.nameImage)
         imarray = np.asarray(imge)
@@ -79,6 +78,8 @@ class Window(): # Añadir Qwindow para hacer el onClick
         for x in range(0, self.arrayImage.shape[0]): 
             for y in range(0, self.arrayImage.shape[1]): 
                 Vout = lut[self.arrayImage[x][y][0]]
+                if Vout < 0: Vout = 0
+                if Vout > 255: Vout = 255
                 arrayResult[x][y][0] = Vout
                 arrayResult[x][y][1] = Vout
                 arrayResult[x][y][2] = Vout
