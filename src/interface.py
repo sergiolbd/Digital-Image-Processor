@@ -12,6 +12,7 @@ from newmonochrome import grayConversion
 from brightness import brightness
 from contraste import contrast
 from entropia import entropy
+from sections_linear_tansformations import sectionsLinearTrasformations
 from window import Window
 import cv2
 
@@ -42,11 +43,6 @@ class basicMenubar(QMainWindow):
         openAction.setStatusTip('Open Imagen')
         openAction.triggered.connect(self.seleccionar_archivo)
 
-        ROIAction = QAction('&ROI', self)        
-        ROIAction.setShortcut('Ctrl+R')
-        ROIAction.setStatusTip('Select region of interest')
-        ROIAction.triggered.connect(self.selectROI)
-        
         exitAction = QAction('&Exit', self)        
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Exit application')
@@ -55,7 +51,6 @@ class basicMenubar(QMainWindow):
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(openAction)
-        fileMenu.addAction(ROIAction)
         fileMenu.addAction(exitAction)
 
         #-------------------Edit--------------------------
@@ -67,17 +62,25 @@ class basicMenubar(QMainWindow):
         ROIAction = QAction('&Region of Interest', self)        
         ROIAction.setShortcut('Ctrl+R')
         ROIAction.setStatusTip('Select a ROI in Image')
-        ROIAction.triggered.connect(qApp.quit)
+        ROIAction.triggered.connect(self.selectROI)
+
+        # Transformaciones lineales
+        new_submenu2 = QMenu('Transformaciones lineales', self)
+        brillo_contraste = QAction('Brillo/Contraste', self)
+        portramos = QAction('Por tramos', self)
+        portramos.triggered.connect(self.sections)
+
+
+        new_submenu2.addAction(brillo_contraste)
+        new_submenu2.addAction(portramos)
 
         menubar2 = self.menuBar()
         fileMenu2 = menubar2.addMenu('&Edit')
         fileMenu2.addAction(copyAction)
         fileMenu2.addAction(ROIAction)
+        fileMenu2.addMenu(new_submenu2)
 
         #--------------------Image-------------------------
-
-        brightAction = QAction('&Brightness/Contranst', self)        
-        brightAction.triggered.connect(qApp.quit)
 
         infoAction = QAction('&Información', self)
         infoAction.setStatusTip('Mostrar información sobre la imagen')
@@ -109,11 +112,11 @@ class basicMenubar(QMainWindow):
         
         submenu_acum.addAction(third_action)
         submenu_acum.addAction(fourth_action)
-        new_submenu.addMenu(submenu_acum)
+        new_submenu.addMenu(submenu_acum) 
         
         fileMenu3.addMenu(new_submenu)
         fileMenu3.addAction(infoAction)
-        fileMenu3.addAction(brightAction)
+        
         
         #--------------------Help-------------------------
 
@@ -201,6 +204,9 @@ class basicMenubar(QMainWindow):
         new = Window(nameImage)
         new.newWindow(self)
         self.windows.append(new)
+
+    def sections(self):
+        sectionsLinearTrasformations()
         
         
 
