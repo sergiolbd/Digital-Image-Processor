@@ -206,13 +206,13 @@ class basicMenubar(QMainWindow):
         self.windows.append(new)
 
     def sections(self):
-        r1 = 80
-        s1 = 0
-        r2 = 255
-        s2 = 255
-        imarray2 = sectionsLinearTrasformations(self.windows[-1].getArray(), r1, s1, r2, s2)
+        x1, ok = QInputDialog.getInt(self, "x1", "x1:", 1, 0, 255)
+        y1, ok = QInputDialog.getInt(self, "y1", "y1:", 1, 0, 255)
+        x2, ok = QInputDialog.getInt(self, "x2", "x2:", 1, 0, 255)
+        y2, ok = QInputDialog.getInt(self, "y2", "y2:", 1, 0, 255)
+        imarray2 = sectionsLinearTrasformations(self.windows[-1].getArray(), x1, y1, x2, y2)
         
-        newsection = Window(self.windows[-1].getName() + '_ROI') ## Revisar para poner bien el nombre
+        newsection = Window(self.windows[-1].getName() + '_Sections') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
