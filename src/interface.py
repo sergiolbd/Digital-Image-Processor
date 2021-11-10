@@ -206,9 +206,17 @@ class basicMenubar(QMainWindow):
         self.windows.append(new)
 
     def sections(self):
-        sectionsLinearTrasformations()
+        r1 = 80
+        s1 = 0
+        r2 = 255
+        s2 = 255
+        imarray2 = sectionsLinearTrasformations(self.windows[-1].getArray(), r1, s1, r2, s2)
         
-        
+        newsection = Window(self.windows[-1].getName() + '_ROI') ## Revisar para poner bien el nombre
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
 
 
 
