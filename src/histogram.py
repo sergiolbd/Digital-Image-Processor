@@ -31,20 +31,20 @@ def histogram(imagearray, normalized, cumulative, show):
     if normalized == False and cumulative == False: 
 
       plot.bar(eje_x, hist)
-      plot.xlabel('[0-255]')
-      plot.ylabel('Frecuencia absoluta')
-      plot.title('Histrograma')
+      plot.xlabel('Vin[0-255]')
+      plot.ylabel('h(i)')
+      plot.title('Histograma')
       plot.show()
 
     elif normalized == True and cumulative == False: 
 
       plot.bar(eje_x, histNormalized)
-      plot.xlabel('[0-255]')
-      plot.ylabel('Frecuencia absoluta')
-      plot.title('Histrograma normalizado')
+      plot.xlabel('Vin[0-255]')
+      plot.ylabel('h(i)')
+      plot.title('Histograma normalizado')
       plot.show()
 
-    elif normalized == False and cumulative: 
+    elif normalized == False and cumulative == True: 
   
       for i in range(256):
         if i-1 >= 0:
@@ -53,12 +53,12 @@ def histogram(imagearray, normalized, cumulative, show):
             hist[i] = hist[i]
 
       plot.bar(eje_x, hist)
-      plot.xlabel('[0-255]')
-      plot.ylabel('Frecuencia absoluta')
-      plot.title('Histrograma acumulado')
+      plot.xlabel('Vin[0-255]')
+      plot.ylabel('h(i)')
+      plot.title('Histograma acumulado')
       plot.show()
 
-    elif normalized and cumulative: 
+    elif normalized == True and cumulative == True: 
     
       for i in range(256):
         if i - 1 > 0:
@@ -68,9 +68,9 @@ def histogram(imagearray, normalized, cumulative, show):
 
 
       plot.bar(eje_x, histNormalized)
-      plot.xlabel('[0-255]')
-      plot.ylabel('Frecuencia absoluta')
-      plot.title('Histrograma normalizado acumulado')
+      plot.xlabel('Vin[0-255]')
+      plot.ylabel('h(i)')
+      plot.title('Histograma normalizado acumulado')
       plot.show()
 
   return hist

@@ -1,6 +1,6 @@
 import math
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox, QInputDialog
+from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox, QInputDialog, QSlider
 from PyQt5.QtGui import QPixmap, QImage
 from PIL import Image
 import numpy as np
@@ -13,10 +13,9 @@ from brightness import brightness
 from contraste import contrast
 from entropia import entropy
 from sections_linear_tansformations import sectionsLinearTrasformations
+from specificationHistogram import histogramSpecification
 from window import Window
 import cv2
-
-
 
 class basicMenubar(QMainWindow):
     
@@ -74,11 +73,21 @@ class basicMenubar(QMainWindow):
         new_submenu2.addAction(brillo_contraste)
         new_submenu2.addAction(portramos)
 
+        # Transformaciones no lineales
+        new_submenu3 = QMenu('Transformaciones no lineales', self)
+        esp_hist = QAction('Especificación del histograma', self)
+        esp_hist.triggered.connect(self.specification)
+        ecualizacion = QAction('Ecualización', self)
+        
+        new_submenu3.addAction(esp_hist)
+        new_submenu3.addAction(ecualizacion)
+
         menubar2 = self.menuBar()
         fileMenu2 = menubar2.addMenu('&Edit')
         fileMenu2.addAction(copyAction)
         fileMenu2.addAction(ROIAction)
         fileMenu2.addMenu(new_submenu2)
+        fileMenu2.addMenu(new_submenu3)
 
         #--------------------Image-------------------------
 
@@ -234,5 +243,16 @@ class basicMenubar(QMainWindow):
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2)
 
+    def specification(self):
+        imarray2 = histogramSpecification(
+                                            self.windows[-2].getHist(),
+                                            self.windows[-1].getHist(), 
+                                            self.windows[-2].getArray(),
+                                            self.windows[-1].getArray())
 
+        newsection = Window(self.windows[-2].getName() + '_specification') ## Revisar para poner bien el nombre
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
 
