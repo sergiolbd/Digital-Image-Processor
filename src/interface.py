@@ -206,11 +206,26 @@ class basicMenubar(QMainWindow):
         self.windows.append(new)
 
     def sections(self):
-        x1, ok = QInputDialog.getInt(self, "x1", "x1:", 1, 0, 255)
-        y1, ok = QInputDialog.getInt(self, "y1", "y1:", 1, 0, 255)
-        x2, ok = QInputDialog.getInt(self, "x2", "x2:", 1, 0, 255)
-        y2, ok = QInputDialog.getInt(self, "y2", "y2:", 1, 0, 255)
-        imarray2 = sectionsLinearTrasformations(self.windows[-1].getArray(), x1, y1, x2, y2)
+        numofsections, ok = QInputDialog.getInt(self, "Number of sections ", "numofsections:", 1, 0, 5)
+        points = []
+        x = []
+        y = []
+        for i in range(1,numofsections+1):
+            x1, ok = QInputDialog.getInt(self, "Tramo {} : x1".format(i), "x1:", 1, 0, 255)
+            y1, ok = QInputDialog.getInt(self, "Tramo {} : y1".format(i), "y1:", 1, 0, 255)
+            x2, ok = QInputDialog.getInt(self, "Tramo {} : x2".format(i), "x2:", 1, 0, 255)
+            y2, ok = QInputDialog.getInt(self, "Tramo {} : y2".format(i), "y2:", 1, 0, 255)
+            points.append(((x1,y1), (x2,y2)))
+            x.append(x1)
+            x.append(x2)
+            y.append(y1)
+            y.append(y2)
+
+        fig, ax = plot.subplots()
+        ax.plot(x, y)
+        plot.show()
+
+        imarray2 = sectionsLinearTrasformations(self.windows[-1].getArray(), numofsections, points)
         
         newsection = Window(self.windows[-1].getName() + '_Sections') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)

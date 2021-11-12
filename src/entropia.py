@@ -16,16 +16,17 @@ def entropy(hist, size):
       if hist[i] > 0:
         numofcolors += 1
 
-    print(numofcolors)
+    # print(numofcolors)
 
     for i in range(256):
       if hist[i] > 0:
         probabilidad_i = hist[i]/(height*width)
-        sumatoriohist +=  probabilidad_i * math.log2(probabilidad_i)
+        if (probabilidad_i > 0):
+          sumatoriohist +=  probabilidad_i * math.log2(probabilidad_i)
 
     entropia = -sumatoriohist
 
     if entropia < 0 or entropia > 8:
       return "Entropia erronea, fuera del rango [0,8]"
 
-    return round(entropia,3)
+    return entropia

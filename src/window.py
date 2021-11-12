@@ -33,14 +33,14 @@ class Window(): # Añadir Qwindow para hacer el onClick
         self.showImage(main, imarray)
         self.setValues(imarray)
 
-        print(self.brightness)
-        print(self.contrast)
-        new = Window('fisg')
-        newArray = self.change(170, self.contrast)
-        new.setValues(newArray)
-        new.showImage(main, newArray)
-        print(new.brightness)
-        print(new.contrast)
+        # print(self.brightness)
+        # print(self.contrast)
+        # new = Window('fisg')
+        # newArray = self.change(170, self.contrast)
+        # new.setValues(newArray)
+        # new.showImage(main, newArray)
+        # print(new.brightness)
+        # print(new.contrast)
 
 
     def setValues(self, imarray):
