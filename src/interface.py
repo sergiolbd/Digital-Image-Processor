@@ -221,6 +221,7 @@ class basicMenubar(QMainWindow):
             y.append(y1)
             y.append(y2)
 
+        # Mostrar los tramos introducidos
         fig, ax = plot.subplots()
         ax.plot(x, y)
         plot.show()
