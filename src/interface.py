@@ -14,6 +14,7 @@ from contraste import contrast
 from entropia import entropy
 from sections_linear_tansformations import sectionsLinearTrasformations
 from specificationHistogram import histogramSpecification
+from ecualizehistogram import histogramEqualize
 from window import Window
 import cv2
 
@@ -77,7 +78,8 @@ class basicMenubar(QMainWindow):
         new_submenu3 = QMenu('Transformaciones no lineales', self)
         esp_hist = QAction('Especificación del histograma', self)
         esp_hist.triggered.connect(self.specification)
-        ecualizacion = QAction('Ecualización', self)
+        ecualizacion = QAction('Ecualización del histograma', self)
+        ecualizacion.triggered.connect(self.equalize)
         
         new_submenu3.addAction(esp_hist)
         new_submenu3.addAction(ecualizacion)
@@ -256,3 +258,11 @@ class basicMenubar(QMainWindow):
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2)
 
+    def equalize(self):
+        imarray2 = histogramEqualize(self.windows[-1].getHist(), self.windows[-1].getArray())
+
+        newsection = Window(self.windows[-1].getName() + '_equalize') ## Revisar para poner bien el nombre
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
