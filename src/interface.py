@@ -84,13 +84,18 @@ class basicMenubar(QMainWindow):
         ecualizacion.triggered.connect(self.equalize)
         gamma = QAction('Corrección Gamma', self)
         gamma.triggered.connect(self.gammaCorrection)
-        difference = QAction('Diferencia de imágenes', self)
-        difference.triggered.connect(self.differenceImage)
+        difference = QMenu('Diferencia de imágenes', self)
+        distribution = QAction('Distribución de valores', self)
+        distribution.triggered.connect(self.distributionValues)
+        changeMap = QAction('Mapa de cambios', self)
+        changeMap.triggered.connect(self.changeMap)
         
         new_submenu3.addAction(esp_hist)
         new_submenu3.addAction(ecualizacion)
         new_submenu3.addAction(gamma)
-        new_submenu3.addAction(difference)
+        difference.addAction(distribution)
+        difference.addAction(changeMap)
+        new_submenu3.addMenu(difference)
 
         menubar2 = self.menuBar()
         fileMenu2 = menubar2.addMenu('&Edit')
@@ -286,13 +291,17 @@ class basicMenubar(QMainWindow):
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2)
 
-    def differenceImage(self):
-        # gammaValue, ok = QInputDialog.getDouble(self, "Gamma Value ", "Y:", 1.00, 1/20, 20, 2)
+    def changeMap(self):
+        T, ok = QInputDialog.getInt(self, "T", "T:", 1, 0, 255)
 
-        imarray2 = imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray())
+        imarray2 = imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), T, False)
 
         newsection = Window(self.windows[-1].getName() + 'Diference') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2)
+
+    def distributionValues(self):
+        imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), 0, True)
+
