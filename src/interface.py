@@ -15,6 +15,7 @@ from entropia import entropy
 from sections_linear_tansformations import sectionsLinearTrasformations
 from specificationHistogram import histogramSpecification
 from ecualizehistogram import histogramEqualize
+from gammaCorrection import correctionGamma
 from window import Window
 import cv2
 
@@ -80,9 +81,12 @@ class basicMenubar(QMainWindow):
         esp_hist.triggered.connect(self.specification)
         ecualizacion = QAction('Ecualización del histograma', self)
         ecualizacion.triggered.connect(self.equalize)
+        gamma = QAction('Corrección Gamma', self)
+        gamma.triggered.connect(self.gammaCorrection)
         
         new_submenu3.addAction(esp_hist)
         new_submenu3.addAction(ecualizacion)
+        new_submenu3.addAction(gamma)
 
         menubar2 = self.menuBar()
         fileMenu2 = menubar2.addMenu('&Edit')
@@ -262,6 +266,17 @@ class basicMenubar(QMainWindow):
         imarray2 = histogramEqualize(self.windows[-1].getHist(), self.windows[-1].getArray())
 
         newsection = Window(self.windows[-1].getName() + '_equalize') ## Revisar para poner bien el nombre
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
+
+    def gammaCorrection(self):
+        gammaValue, ok = QInputDialog.getDouble(self, "Gamma Value ", "Y:", 1.00, 1/20, 20, 2)
+
+        imarray2 = correctionGamma(self.windows[-1].getHist(), self.windows[-1].getArray(), gammaValue)
+
+        newsection = Window(self.windows[-1].getName() + '_Gamma') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)

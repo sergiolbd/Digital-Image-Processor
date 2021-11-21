@@ -1,7 +1,7 @@
 from os import name
 from PyQt5 import QtCore
-from PyQt5.QtGui import QImage, QPixmap, QWindow
-from PyQt5.QtWidgets import QDockWidget, QLabel
+from PyQt5.QtGui import QCursor, QImage, QPixmap, QWindow
+from PyQt5.QtWidgets import QDockWidget, QLabel, QWidget
 import numpy as np
 from PIL import Image
 import cv2
@@ -11,9 +11,10 @@ from contraste import contrast
 from brightness import brightness
 
 
-class Window(): # Añadir Qwindow para hacer el onClick
+class Window(QWidget): # Añadir Qwindow para hacer el onClick
 
-    def __init__(self, nameImage):
+    def __init__(self, nameImage, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.nameImage = nameImage
         self.arrayImage = []
         self.arrayHist = []
@@ -63,6 +64,8 @@ class Window(): # Añadir Qwindow para hacer el onClick
         item = QDockWidget(self.nameImage, main)
         item.setWidget(img)
         main.addDockWidget(QtCore.Qt.DockWidgetArea.LeftDockWidgetArea, item)
+
+        print(self.mapFromGlobal(QCursor.pos()))
 
     def change(self, newBrightness, newContrast):
         # Hacer la LUT
