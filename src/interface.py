@@ -16,6 +16,7 @@ from sections_linear_tansformations import sectionsLinearTrasformations
 from specificationHistogram import histogramSpecification
 from ecualizehistogram import histogramEqualize
 from gammaCorrection import correctionGamma
+from imageDifference import imageDifference
 from window import Window
 import cv2
 
@@ -83,10 +84,13 @@ class basicMenubar(QMainWindow):
         ecualizacion.triggered.connect(self.equalize)
         gamma = QAction('Corrección Gamma', self)
         gamma.triggered.connect(self.gammaCorrection)
+        difference = QAction('Diferencia de imágenes', self)
+        difference.triggered.connect(self.differenceImage)
         
         new_submenu3.addAction(esp_hist)
         new_submenu3.addAction(ecualizacion)
         new_submenu3.addAction(gamma)
+        new_submenu3.addAction(difference)
 
         menubar2 = self.menuBar()
         fileMenu2 = menubar2.addMenu('&Edit')
@@ -277,6 +281,17 @@ class basicMenubar(QMainWindow):
         imarray2 = correctionGamma(self.windows[-1].getHist(), self.windows[-1].getArray(), gammaValue)
 
         newsection = Window(self.windows[-1].getName() + '_Gamma') ## Revisar para poner bien el nombre
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
+
+    def differenceImage(self):
+        # gammaValue, ok = QInputDialog.getDouble(self, "Gamma Value ", "Y:", 1.00, 1/20, 20, 2)
+
+        imarray2 = imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray())
+
+        newsection = Window(self.windows[-1].getName() + 'Diference') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
