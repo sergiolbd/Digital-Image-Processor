@@ -21,6 +21,7 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         self.contrast = None
         self.brigthness = None
         self.main = None
+        self.image = None
     
     def newWindow(self, main):
 
@@ -59,6 +60,7 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         main.windowsStatus.append(True)
         
         img.setPixmap(QPixmap.fromImage(qimage))
+        self.image = qimage
         item = QDockWidget(self.nameImage, main)
         item.setWidget(img)
         item.mouseDoubleClickEvent = self.setStatus
@@ -118,3 +120,7 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         for i in range(len(self.main.windows)):
             if self.main.windows[i].getName() == self.nameImage:
                 self.main.windowsStatus[i] = True
+                
+    def save(self):
+        self.image.save("Images/" + "test.png")
+        

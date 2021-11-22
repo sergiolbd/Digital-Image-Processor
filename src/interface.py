@@ -159,6 +159,7 @@ class basicMenubar(QMainWindow):
         # Obtenemos la ruta de la image a abrir
         fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
         self.newImagen(fileImage)
+        for x in self.windows: print(x.getName())
             
     def abrirHistograma(self, normalized, cumulative):
         indice = self.windowsStatus.index(True)
