@@ -196,8 +196,17 @@ class basicMenubar(QMainWindow):
         QMessageBox.about(self, "Información de la imagen", mensaje)
 
     def brightnessContrast(self):
-        print("Falta implementar slider")
-
+        indice = self.windowsStatus.index(True)
+        ## valores de los sliders
+        newBrightness = 127
+        newContrast = 127
+        newArray = self.windows[indice].change(newBrightness, newContrast)
+        
+        newRoi = Window(self.windows[indice].getName() + '_new')
+        newRoi.setArray(newArray)
+        self.windows.append(newRoi)
+        self.windows[-1].showImage(self, newArray)
+        self.windows[-1].setValues(newArray)
         
     # Intentando hacer una selección de una region de interes sin necesidad del raton
     def selectROI(self):
@@ -226,8 +235,8 @@ class basicMenubar(QMainWindow):
         newRoi = Window(self.windows[indice].getName() + '_ROI') ## Revisar para poner bien el nombre
         newRoi.setArray(imarray2)
         self.windows.append(newRoi)
-        self.windows[indice].showImage(self, imarray2)
-        self.windows[indice].setValues(imarray2)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
 
     def newImagen(self, nameImage):
         new = Window(nameImage)
@@ -261,8 +270,8 @@ class basicMenubar(QMainWindow):
         newsection = Window(self.windows[indice].getName() + '_Sections') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
-        self.windows[indice].showImage(self, imarray2)
-        self.windows[indice].setValues(imarray2)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
 
     def specification(self):###################### Revisar como poner los indices
         imarray2 = histogramSpecification(
@@ -284,8 +293,8 @@ class basicMenubar(QMainWindow):
         newsection = Window(self.windows[indice].getName() + '_equalize') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
-        self.windows[indice].showImage(self, imarray2)
-        self.windows[indice].setValues(imarray2)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
 
     def gammaCorrection(self):
         indice = self.windowsStatus.index(True)
@@ -296,8 +305,8 @@ class basicMenubar(QMainWindow):
         newsection = Window(self.windows[indice].getName() + '_Gamma') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
-        self.windows[indice].showImage(self, imarray2)
-        self.windows[indice].setValues(imarray2)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
 
     def changeMap(self): ##################### Revisar para poder el indice
         T, ok = QInputDialog.getInt(self, "T", "T:", 1, 0, 255)
