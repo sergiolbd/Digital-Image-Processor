@@ -32,9 +32,13 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         imge = cv2.imread(self.nameImage)
         imarray = np.asarray(imge)
         imarray = cv2.cvtColor(imarray, cv2.COLOR_BGR2RGB)
+        
+        main.setFalse()
+        main.windowsStatus.append(True)
+        
         self.showImage(main, imarray)
         self.setValues(imarray)
-
+        
         # print(self.brightness)
         # print(self.contrast)
         # new = Window('fisg')
@@ -66,13 +70,13 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         img.setMouseTracking(True)
         img.mouseMoveEvent = self.getPixel
         self.main = main
+        
         img.setPixmap(QPixmap.fromImage(qimage))
         item = QDockWidget(self.nameImage, main)
         item.setWidget(img)
+        item.mouseDoubleClickEvent = self.setStatus
         main.addDockWidget(QtCore.Qt.DockWidgetArea.LeftDockWidgetArea, item)
-
-        print(self.mapFromGlobal(QCursor.pos()))
-
+        
     def change(self, newBrightness, newContrast):
         # Hacer la LUT
         # Se necesita la A y la B 
@@ -121,3 +125,9 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         y = event.y()
         if x < self.arrayImage.shape[0] and y < self.arrayImage.shape[1] and x >= 0 and y >= 0:
             self.main.statusBar().showMessage("X: " + str(x) + "    Y: " + str(y) + "   RGB:" + str(self.arrayImage[x][y]))
+
+    def setStatus(self, event):
+        self.main.setFalse()
+        for i in range(len(self.main.windows)):
+            if self.main.windows[i].getName() == self.nameImage:
+                self.main.windowsStatus[i] = True

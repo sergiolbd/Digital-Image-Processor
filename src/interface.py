@@ -26,7 +26,7 @@ class basicMenubar(QMainWindow):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
-        
+        self.windowsStatus = []
         self.windows = []
         self.openImages = []  # Rutas de imagenes abiertas
         self.openRgb = []   # RGB de cada imagen
@@ -163,34 +163,36 @@ class basicMenubar(QMainWindow):
         # Obtenemos la ruta de la image a abrir
         fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
         self.openImages.append(fileImage)
-        
         self.newImagen(fileImage)
             
     def abrirHistograma(self, normalized, cumulative):
-        histogram(self.windows[-1].getArray(), normalized, cumulative, True)
+        indice = self.windowsStatus.index(True)
+        histogram(self.windows[indice].getArray(), normalized, cumulative, True)
 
     def blancoYnegro(self):
-        self.windows.append(self.windows[-1])
+        indice = self.windowsStatus.index(True)
+        self.windows.append(self.windows[indice])
         ###### Cambiar nombre de la imagen
-        self.windows[-1].showImage(self, self.windows[-1].getArray())
+        self.windows[indice].showImage(self, self.windows[indice].getArray())
 
     def show_info(self):
-        imarray = self.windows[-1].getArray()
-        im = Image.open(self.openImages[-1])
+        indice = self.windowsStatus.index(True)
+        imarray = self.windows[indice].getArray()
+        im = Image.open(self.openImages[indice])
         formato = "\nTipo fichero: " + im.format
         size = "\nTamaño: " + str(imarray.shape)
-        ruta = "\nRuta:" + self.windows[-1].getName()
+        ruta = "\nRuta:" + self.windows[indice].getName()
         
         # Obtener el menor y mayor pixel (con imarray[...,0] accedemos al primer canal)
         max = str(np.max(imarray[...,0]))
         min = str(np.min(imarray[...,0]))
         rango = "\nRango valores: ["+ min + "," + max + "]"
 
-        brillo = brightness(self.windows[-1].getHist(), imarray.shape)
+        brillo = brightness(self.windows[indice].getHist(), imarray.shape)
         brillostr = "\nBrillo: " + str(brillo)
-        contraste =  contrast(self.windows[-1].getHist(), imarray.shape, brillo)
+        contraste =  contrast(self.windows[indice].getHist(), imarray.shape, brillo)
         contrastestr = "\nContraste: " + str(contraste)
-        entropia = entropy(self.windows[-1].getHist(), imarray.shape)
+        entropia = entropy(self.windows[indice].getHist(), imarray.shape)
         entropiastr = "\nEntropia: " + str(entropia)
         numofbits = math.ceil(entropia)
         numofbitsstr = "\nNº de bits: " + str(numofbits)
@@ -204,7 +206,8 @@ class basicMenubar(QMainWindow):
         
     # Intentando hacer una selección de una region de interes sin necesidad del raton
     def selectROI(self):
-        imarray = self.windows[-1].getArray()
+        indice = self.windowsStatus.index(True)
+        imarray = self.windows[indice].getArray()
         maxX = imarray.shape[0]
         maxY = imarray.shape[1]
         x1, ok = QInputDialog.getInt(self, "x1", "x1:", 1, 0, maxX)
@@ -225,11 +228,11 @@ class basicMenubar(QMainWindow):
                 l += 1
             k += 1
 
-        newRoi = Window(self.windows[-1].getName() + '_ROI') ## Revisar para poner bien el nombre
+        newRoi = Window(self.windows[indice].getName() + '_ROI') ## Revisar para poner bien el nombre
         newRoi.setArray(imarray2)
         self.windows.append(newRoi)
-        self.windows[-1].showImage(self, imarray2)
-        self.windows[-1].setValues(imarray2)
+        self.windows[indice].showImage(self, imarray2)
+        self.windows[indice].setValues(imarray2)
 
     def newImagen(self, nameImage):
         new = Window(nameImage)
@@ -237,6 +240,7 @@ class basicMenubar(QMainWindow):
         self.windows.append(new)
 
     def sections(self):
+        indice = self.windowsStatus.index(True)
         numofsections, ok = QInputDialog.getInt(self, "Number of sections ", "numofsections:", 1, 0, 5)
         points = []
         x = []
@@ -257,15 +261,15 @@ class basicMenubar(QMainWindow):
         ax.plot(x, y)
         plot.show()
 
-        imarray2 = sectionsLinearTrasformations(self.windows[-1].getArray(), numofsections, points)
+        imarray2 = sectionsLinearTrasformations(self.windows[indice].getArray(), numofsections, points)
         
-        newsection = Window(self.windows[-1].getName() + '_Sections') ## Revisar para poner bien el nombre
+        newsection = Window(self.windows[indice].getName() + '_Sections') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
-        self.windows[-1].showImage(self, imarray2)
-        self.windows[-1].setValues(imarray2)
+        self.windows[indice].showImage(self, imarray2)
+        self.windows[indice].setValues(imarray2)
 
-    def specification(self):
+    def specification(self):###################### Revisar como poner los indices
         imarray2 = histogramSpecification(
                                             self.windows[-2].getHist(),
                                             self.windows[-1].getHist(), 
@@ -279,26 +283,28 @@ class basicMenubar(QMainWindow):
         self.windows[-1].setValues(imarray2)
 
     def equalize(self):
-        imarray2 = histogramEqualize(self.windows[-1].getHist(), self.windows[-1].getArray())
+        indice = self.windowsStatus.index(True)
+        imarray2 = histogramEqualize(self.windows[indice].getHist(), self.windows[indice].getArray())
 
-        newsection = Window(self.windows[-1].getName() + '_equalize') ## Revisar para poner bien el nombre
+        newsection = Window(self.windows[indice].getName() + '_equalize') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
-        self.windows[-1].showImage(self, imarray2)
-        self.windows[-1].setValues(imarray2)
+        self.windows[indice].showImage(self, imarray2)
+        self.windows[indice].setValues(imarray2)
 
     def gammaCorrection(self):
+        indice = self.windowsStatus.index(True)
         gammaValue, ok = QInputDialog.getDouble(self, "Gamma Value ", "Y:", 1.00, 1/20, 20, 2)
 
-        imarray2 = correctionGamma(self.windows[-1].getHist(), self.windows[-1].getArray(), gammaValue)
+        imarray2 = correctionGamma(self.windows[indice].getHist(), self.windows[indice].getArray(), gammaValue)
 
-        newsection = Window(self.windows[-1].getName() + '_Gamma') ## Revisar para poner bien el nombre
+        newsection = Window(self.windows[indice].getName() + '_Gamma') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)
         self.windows.append(newsection)
-        self.windows[-1].showImage(self, imarray2)
-        self.windows[-1].setValues(imarray2)
+        self.windows[indice].showImage(self, imarray2)
+        self.windows[indice].setValues(imarray2)
 
-    def changeMap(self):
+    def changeMap(self): ##################### Revisar para poder el indice
         T, ok = QInputDialog.getInt(self, "T", "T:", 1, 0, 255)
 
         imarray2 = imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), T, False)
@@ -309,7 +315,10 @@ class basicMenubar(QMainWindow):
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2)
 
-    def distributionValues(self):
+    def distributionValues(self):  ##################### Revisar para poder el indice
         imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), 0, True)
                
-
+    # Pone como no principales todas las ventanas
+    def setFalse(self):
+        for i in range(len(self.windowsStatus)):
+            self.windowsStatus[i] = False
