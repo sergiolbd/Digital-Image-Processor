@@ -311,11 +311,5 @@ class basicMenubar(QMainWindow):
 
     def distributionValues(self):
         imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), 0, True)
-        
-    def positionBar(self):
-        if len(self.windows) == 0:
-            self.statusBar().showMessage("X: - Y: -")
-        else:
-            self.statusBar().showMessage("X: ", self.windows[-1].posicion[0], "Y: ", self.windows[-1].posicion[1])
-            
+               
 
