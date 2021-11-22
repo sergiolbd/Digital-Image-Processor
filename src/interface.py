@@ -1,7 +1,8 @@
 import math
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox, QInputDialog, QSlider
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtCore import Qt
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox, QInputDialog, QSlider, QHBoxLayout
+from PyQt5.QtGui import QPixmap, QImage, QWindowStateChangeEvent
 from PIL import Image
 import numpy as np
 
@@ -18,6 +19,7 @@ from ecualizehistogram import histogramEqualize
 from gammaCorrection import correctionGamma
 from imageDifference import imageDifference
 from window import Window
+from slider import Example
 import cv2
 
 class basicMenubar(QMainWindow):
@@ -69,6 +71,7 @@ class basicMenubar(QMainWindow):
         # Transformaciones lineales
         new_submenu2 = QMenu('Transformaciones lineales', self)
         brillo_contraste = QAction('Brillo/Contraste', self)
+        brillo_contraste.triggered.connect(self.brightnessContrast)
         portramos = QAction('Por tramos', self)
         portramos.triggered.connect(self.sections)
 
@@ -195,6 +198,10 @@ class basicMenubar(QMainWindow):
         mensaje = ruta + formato + size + rango + brillostr + contrastestr + entropiastr + numofbitsstr
         QMessageBox.about(self, "Información de la imagen", mensaje)
 
+    def brightnessContrast(self):
+        print("Falta implementar slider")
+
+        
     # Intentando hacer una selección de una region de interes sin necesidad del raton
     def selectROI(self):
         imarray = self.windows[-1].getArray()

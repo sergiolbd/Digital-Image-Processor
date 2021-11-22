@@ -16,6 +16,9 @@ def correctionGamma(hist1, imarray1, gammaValue):
   for i in range(m):
     b.append(a[i]**gammaValue)
 
+  # Mostrar la función gamma
+  printGamma(a, b)
+
   lut = []
   # Escalado de los valores de b a Vout en el intervalo permitido [0,255]
   for i in range(m):
@@ -34,3 +37,10 @@ def correctionGamma(hist1, imarray1, gammaValue):
           arrayResult[x][y][2] = Vout
 
   return arrayResult
+
+def printGamma(eje_x, eje_y):
+  plot.plot(eje_x, eje_y)
+  plot.xlabel('[0-255]')
+  plot.ylabel('a^gamma')
+  plot.title('a')
+  plot.show()
