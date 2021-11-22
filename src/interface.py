@@ -28,10 +28,6 @@ class basicMenubar(QMainWindow):
         super().__init__(*args, **kwargs)        
         self.windowsStatus = []
         self.windows = []
-        self.openImages = []  # Rutas de imagenes abiertas
-        self.openRgb = []   # RGB de cada imagen
-        self.hist = []
-        self.gray = [] # Lista para almacenar el array de la imagen en blanco y negro
         
         self.initUI() 
         
@@ -162,7 +158,6 @@ class basicMenubar(QMainWindow):
     def seleccionar_archivo(self):
         # Obtenemos la ruta de la image a abrir
         fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
-        self.openImages.append(fileImage)
         self.newImagen(fileImage)
             
     def abrirHistograma(self, normalized, cumulative):
@@ -178,7 +173,7 @@ class basicMenubar(QMainWindow):
     def show_info(self):
         indice = self.windowsStatus.index(True)
         imarray = self.windows[indice].getArray()
-        im = Image.open(self.openImages[indice])
+        im = Image.open(self.windows[indice].getName())
         formato = "\nTipo fichero: " + im.format
         size = "\nTamaño: " + str(imarray.shape)
         ruta = "\nRuta:" + self.windows[indice].getName()
