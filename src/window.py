@@ -20,6 +20,7 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         self.arrayHist = []
         self.contrast = None
         self.brigthness = None
+        self.main = None
     
     def newWindow(self, main):
 
@@ -60,6 +61,11 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         qimage = QImage(arrayImage, arrayImage.shape[1], arrayImage.shape[0], arrayImage.strides[0],                                                                                                                                                
                      QImage.Format_RGB888) 
         img = QLabel(self.nameImage)
+        
+        ## Mostrar posicion dek 
+        img.setMouseTracking(True)
+        img.mouseMoveEvent = self.getPixel
+        self.main = main
         img.setPixmap(QPixmap.fromImage(qimage))
         item = QDockWidget(self.nameImage, main)
         item.setWidget(img)
@@ -109,3 +115,8 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
 
     def setArray(self, arrayImage):
         self.arrayImage = arrayImage
+        
+    def getPixel(self, event):
+        x = event.x()
+        y = event.y()
+        self.main.statusBar().showMessage("X: " + str(x) + "    Y: " + str(y) + "   RGB:" + str(self.arrayImage[x][y]))

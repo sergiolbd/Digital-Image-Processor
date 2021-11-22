@@ -27,13 +27,13 @@ class basicMenubar(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
         
-        self.initUI() 
         self.windows = []
-        #self.windows2 = ("name": window) /// self.windows2["nombre ventana"] = window
         self.openImages = []  # Rutas de imagenes abiertas
         self.openRgb = []   # RGB de cada imagen
         self.hist = []
         self.gray = [] # Lista para almacenar el array de la imagen en blanco y negro
+        
+        self.initUI() 
         
     def initUI(self):    
         
@@ -311,4 +311,11 @@ class basicMenubar(QMainWindow):
 
     def distributionValues(self):
         imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), 0, True)
+        
+    def positionBar(self):
+        if len(self.windows) == 0:
+            self.statusBar().showMessage("X: - Y: -")
+        else:
+            self.statusBar().showMessage("X: ", self.windows[-1].posicion[0], "Y: ", self.windows[-1].posicion[1])
+            
 
