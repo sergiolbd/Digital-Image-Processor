@@ -42,6 +42,11 @@ class basicMenubar(QMainWindow):
         openAction.setShortcut('Ctrl+O')
         openAction.setStatusTip('Open Imagen')
         openAction.triggered.connect(self.seleccionar_archivo)
+        
+        saveAction = QAction('&Save', self)        
+        saveAction.setShortcut('Ctrl+S')
+        saveAction.setStatusTip('Save Imagen')
+        saveAction.triggered.connect(self.save_image)
 
         exitAction = QAction('&Exit', self)        
         exitAction.setShortcut('Ctrl+Q')
@@ -51,6 +56,7 @@ class basicMenubar(QMainWindow):
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(openAction)
+        fileMenu.addAction(saveAction)
         fileMenu.addAction(exitAction)
 
         #-------------------Edit--------------------------
@@ -160,6 +166,11 @@ class basicMenubar(QMainWindow):
         fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
         self.newImagen(fileImage)
         for x in self.windows: print(x.getName())
+        
+    def save_image(self):
+        indice = self.windowsStatus.index(True)
+        path, ok = QFileDialog.getSaveFileName(self, "Guardar imagen", "default", "Images(*.jpg *.png *.bmp)")
+        self.windows[indice].save(path)
             
     def abrirHistograma(self, normalized, cumulative):
         indice = self.windowsStatus.index(True)
