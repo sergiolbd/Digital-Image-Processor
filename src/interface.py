@@ -163,7 +163,7 @@ class basicMenubar(QMainWindow):
             
     def abrirHistograma(self, normalized, cumulative):
         indice = self.windowsStatus.index(True)
-        histogram(self.windows[indice].getArray(), normalized, cumulative, True)
+        histogram(self.windows[indice].getArray(), normalized, cumulative, True, self.windows[indice].getName())
 
     def blancoYnegro(self):
         indice = self.windowsStatus.index(True)

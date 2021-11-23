@@ -1,40 +1,49 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-import sys
-  
-class Example(object):
-  
-    def setupUi(self, MainWindow):
-  
-        MainWindow.resize(550, 393)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-  
-        self.slider = QtWidgets.QSlider(self.centralwidget)
-        self.slider.setGeometry(QtCore.QRect(190, 100, 160, 16))
-        self.slider.setOrientation(QtCore.Qt.Horizontal)
-  
-        # After each value change, slot "scaletext" will get invoked.
-        self.slider.valueChanged.connect(self.scaletext)
-  
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(230, 150, 301, 161))
-          
-        # set initial font size of label.
-        self.font = QtGui.QFont()
-        self.font.setPointSize(7)
-        self.label.setFont(self.font)
-        MainWindow.setCentralWidget(self.centralwidget)
-  
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-  
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "QSlider"))
-          
-    def scaletext(self, value):
-        # Change font size of label. Size value could 
-        # be anything consistent with the dimension of label.
-        self.font.setPointSize(7 + value//2)
-        self.label.setFont(self.font)
+from PyQt5.QtGui import QWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QSlider, QWidget, QLabel, QHBoxLayout
+from PyQt5.QtCore import Qt
+
+class Example(QWidget):
+
+    def __init__(self, main):
+        super().__init__(main, Qt.WindowType.Window)
+
+        hbox = QHBoxLayout()
+
+        mySlider = QSlider(Qt.Orientation.Horizontal, self)
+        mySlider.setRange(0,255)
+        mySlider.valueChanged[int].connect(self.changeBright)
+        mySlider.value[int].c
+
+        self.label = QLabel('0', self)
+        self.label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        self.label.setMinimumWidth(80)
+
+        mySlider2 = QSlider(Qt.Orientation.Horizontal, self)
+        mySlider2.setRange(0,127)
+        mySlider2.valueChanged[int].connect(self.changeContrast)
+
+        self.label2 = QLabel('0', self)
+        self.label2.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        self.label2.setMinimumWidth(80)
+
+        hbox.addWidget(mySlider)
+        hbox.addSpacing(10)
+        hbox.addWidget(self.label)
+
+        hbox.addWidget(mySlider2)
+        hbox.addSpacing(10)
+        hbox.addWidget(self.label2)
+
+        self.setLayout(hbox)
+
+        self.setGeometry(50,50,320,200)
+        self.setWindowTitle("Brillo & Contraste")
+        self.show()
+
+    def changeBright(self, value):
+      self.label.setText(str(value))
+      # print(value)
+
+    def changeContrast(self, value):
+      self.label2.setText(str(value))
+      # print(value)

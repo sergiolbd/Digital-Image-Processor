@@ -2,7 +2,7 @@ from itertools import accumulate
 from PIL import Image
 import matplotlib.pyplot as plot
 
-def histogram(imagearray, normalized, cumulative, show):
+def histogram(imagearray, normalized, cumulative, show, name):
   x, y, z = imagearray.shape
 
   hist = [0 for i in range(256)]
@@ -30,14 +30,17 @@ def histogram(imagearray, normalized, cumulative, show):
 
     if normalized == False and cumulative == False: 
 
+      plot.figure(name + "Normal")
       plot.bar(eje_x, hist)
       plot.xlabel('Vin[0-255]')
       plot.ylabel('h(i)')
       plot.title('Histograma')
       plot.show()
+      
 
     elif normalized == True and cumulative == False: 
 
+      plot.figure(name + "Normalizado")
       plot.bar(eje_x, histNormalized)
       plot.xlabel('Vin[0-255]')
       plot.ylabel('h(i)')
@@ -52,6 +55,7 @@ def histogram(imagearray, normalized, cumulative, show):
         else:
             hist[i] = hist[i]
 
+      plot.figure(name + "Acumulado")
       plot.bar(eje_x, hist)
       plot.xlabel('Vin[0-255]')
       plot.ylabel('h(i)')
@@ -66,7 +70,7 @@ def histogram(imagearray, normalized, cumulative, show):
         else:
             histNormalized[i] = histNormalized[i]
 
-
+      plot.figure(name + "Normalizado & Acumulado")
       plot.bar(eje_x, histNormalized)
       plot.xlabel('Vin[0-255]')
       plot.ylabel('h(i)')

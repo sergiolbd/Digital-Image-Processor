@@ -41,7 +41,7 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         # Transformacion a escala de grises
         self.arrayImage = grayConversion(imarray)
         # Obtenemos el array del histograma
-        self.arrayHist = histogram(self.arrayImage, True, True, False) # False no mustra el histograma
+        self.arrayHist = histogram(self.arrayImage, True, True, False, self.nameImage) # False no mustra el histograma
         #
         self.brillo()
         #
