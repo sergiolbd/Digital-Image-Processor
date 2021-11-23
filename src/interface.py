@@ -207,17 +207,7 @@ class basicMenubar(QMainWindow):
         QMessageBox.about(self, "Información de la imagen", mensaje)
 
     def brightnessContrast(self):
-        indice = self.windowsStatus.index(True)
-        ## valores de los sliders
-        newBrightness = 127
-        newContrast = 127
-        newArray = self.windows[indice].change(newBrightness, newContrast)
-        
-        newRoi = Window(self.windows[indice].getName() + '_new')
-        newRoi.setArray(newArray)
-        self.windows.append(newRoi)
-        self.windows[-1].showImage(self, newArray)
-        self.windows[-1].setValues(newArray)
+        Example(self)
         
     # Intentando hacer una selección de una region de interes sin necesidad del raton
     def selectROI(self):
