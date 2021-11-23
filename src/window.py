@@ -22,12 +22,14 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         self.brigthness = None
         self.main = None
         self.image = None
+        self.format = "PNG"
     
     def newWindow(self, main):
 
         # Transformamos a PNG para que no pierda información
         if self.nameImage.lower().endswith((".jpg", ".tif")) :
             img_png = Image.open(self.nameImage)
+            self.format = img_png.format
             img_png.save(self.nameImage, format="PNG")
             
         imge = cv2.imread(self.nameImage)
@@ -52,6 +54,11 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         qimage = QImage(arrayImage, arrayImage.shape[1], arrayImage.shape[0], arrayImage.strides[0],                                                                                                                                                
                      QImage.Format_RGB888) 
         img = QLabel(self.nameImage)
+
+        # try:
+        #     imgFormat = Image.open(self.nameImage)
+        #     self.format = imgFormat.format
+        # except FileNotFoundError as e:
         
         ## Mostrar posicion dek 
         img.setMouseTracking(True)

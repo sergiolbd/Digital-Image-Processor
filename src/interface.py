@@ -185,8 +185,7 @@ class basicMenubar(QMainWindow):
     def show_info(self):
         indice = self.windowsStatus.index(True)
         imarray = self.windows[indice].getArray()
-        im = Image.open(self.windows[indice].getName())
-        formato = "\nTipo fichero: " + im.format
+        formato = "\nTipo imagen: " + self.windows[indice].format
         size = "\nTamaño: " + str(imarray.shape)
         ruta = "\nRuta:" + self.windows[indice].getName()
         
