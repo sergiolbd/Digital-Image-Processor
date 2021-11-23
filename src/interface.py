@@ -19,7 +19,7 @@ from ecualizehistogram import histogramEqualize
 from gammaCorrection import correctionGamma
 from imageDifference import imageDifference
 from window import Window
-from slider import Example
+from slider import Slider
 import cv2
 
 class basicMenubar(QMainWindow):
@@ -207,7 +207,7 @@ class basicMenubar(QMainWindow):
         QMessageBox.about(self, "Información de la imagen", mensaje)
 
     def brightnessContrast(self):
-        Example(self)
+        Slider(self)
         
     # Intentando hacer una selección de una region de interes sin necesidad del raton
     def selectROI(self):

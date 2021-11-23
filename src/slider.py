@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QSlider, QWi
 from PyQt5.QtCore import Qt
 from window import Window
 
-class Example(QWidget):
+class Slider(QWidget):
 
     def __init__(self, main):
         super().__init__(main, Qt.WindowType.Window)
