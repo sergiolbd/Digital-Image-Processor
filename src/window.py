@@ -121,6 +121,6 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
             if self.main.windows[i].getName() == self.nameImage:
                 self.main.windowsStatus[i] = True
                 
-    def save(self):
-        self.image.save("Images/" + "test.png")
+    def save(self, path):
+        self.image.save(str(path))
         
