@@ -17,7 +17,7 @@ def imageDifference(imarray1, imarray2, T, Flag):
 
 
   if (Flag == True):
-    histresult = histogram(arrayResult, False, False, False)
+    histresult = histogram(arrayResult, False, False, False, "Distribución de valores")
     printhist(histresult)
   else:
     for x in range(0, imarray1.shape[0]): 
