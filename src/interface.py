@@ -309,18 +309,27 @@ class basicMenubar(QMainWindow):
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2)
 
-    def changeMap(self): ##################### Revisar para poder el indice
+    def changeMap(self): 
+        # Extraccion de las imagenes
+        indice = self.windowsStatus.index(True)
+        image1 = self.windows[indice]
+        fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
+        self.newImagen(fileImage)
+        image2 = self.windows[-1]
+        
         T, ok = QInputDialog.getInt(self, "T", "T:", 1, 0, 255)
+        
+        imarray2 = imageDifference(image1.getArray(), image2.getArray(), T, False)
+        # imarray2 = imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), T, False)
 
-        imarray2 = imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), T, False)
-
-        newsection = Window(self.windows[-1].getName() + 'Diference') ## Revisar para poner bien el nombre
+        newsection = Window(self.windows[-1].getName() + 'Diference')
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2)
 
     def distributionValues(self):
+        # Extraccion de las imagenes
         indice = self.windowsStatus.index(True)
         image1 = self.windows[indice]
         fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")

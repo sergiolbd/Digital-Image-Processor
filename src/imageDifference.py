@@ -5,15 +5,14 @@ from histogram import histogram
 def imageDifference(imarray1, imarray2, T, Flag):
 
   arrayResult = np.zeros([imarray1.shape[0], imarray1.shape[1], 3], np.uint8)
-
   if (imarray1.shape[0] == imarray2.shape[0] and imarray1.shape[1] == imarray2.shape[1]):
 
     for x in range(0, imarray1.shape[0]): 
       for y in range(0, imarray1.shape[1]): 
-          Vout = abs(imarray1[x][y][0] - imarray2[x][y][0])
-          arrayResult[x][y][0] = abs(Vout)
-          arrayResult[x][y][1] = abs(Vout)
-          arrayResult[x][y][2] = abs(Vout)
+          Vout = abs(int(imarray1[x][y][0]) - int(imarray2[x][y][0]))
+          arrayResult[x][y][0] = Vout
+          arrayResult[x][y][1] = Vout
+          arrayResult[x][y][2] = Vout
 
 
   if (Flag == True):
