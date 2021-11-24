@@ -320,8 +320,14 @@ class basicMenubar(QMainWindow):
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2)
 
-    def distributionValues(self):  ##################### Revisar para poder el indice
-        imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), 0, True)
+    def distributionValues(self):
+        indice = self.windowsStatus.index(True)
+        image1 = self.windows[indice]
+        fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
+        self.newImagen(fileImage)
+        image2 = self.windows[-1]
+        
+        imageDifference(image1.getArray(), image2.getArray(), 0, True)
                
     # Pone como no principales todas las ventanas
     def setFalse(self):
