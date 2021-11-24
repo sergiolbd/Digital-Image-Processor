@@ -183,7 +183,7 @@ class basicMenubar(QMainWindow):
         formato = "\nTipo imagen: " + self.windows[indice].format
         size = "\nTamaño: " + str(imarray.shape)
         ruta = "\nRuta:" + self.windows[indice].getName()
-        
+    
         # Obtener el menor y mayor pixel (con imarray[...,0] accedemos al primer canal)
         max = str(np.max(imarray[...,0]))
         min = str(np.min(imarray[...,0]))

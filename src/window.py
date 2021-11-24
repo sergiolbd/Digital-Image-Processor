@@ -100,6 +100,7 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         return self.arrayImage
 
     def getHist(self):
+        self.arrayHist = histogram(self.arrayImage, True, True, False, self.nameImage)
         return self.arrayHist
 
     def setName(self, nameImage):
@@ -111,7 +112,7 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
     def getPixel(self, event):
         x = event.x()
         y = event.y()
-        if x < self.arrayImage.shape[0] and y < self.arrayImage.shape[1] and x >= 0 and y >= 0:
+        if x < self.arrayImage.shape[1] and y < self.arrayImage.shape[0] and x >= 0 and y >= 0:
             self.main.statusBar().showMessage("X: " + str(x) + "    Y: " + str(y) + "   RGB:" + str(self.arrayImage[y][x]))
 
     def setStatus(self, event):

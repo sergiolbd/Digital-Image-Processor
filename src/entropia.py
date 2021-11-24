@@ -20,6 +20,6 @@ def entropy(hist, size):
     entropia = -sumatoriohist
 
     if entropia < 0 or entropia > 8:
-      return "Entropia erronea, fuera del rango [0,8]"
+      print("Entropia erronea, fuera del rango [0,8]")
 
     return entropia
