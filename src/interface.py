@@ -165,7 +165,6 @@ class basicMenubar(QMainWindow):
         # Obtenemos la ruta de la image a abrir
         fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
         self.newImagen(fileImage)
-        for x in self.windows: print(x.getName())
         
     def save_image(self):
         indice = self.windowsStatus.index(True)
@@ -178,9 +177,11 @@ class basicMenubar(QMainWindow):
 
     def blancoYnegro(self):
         indice = self.windowsStatus.index(True)
-        self.windows.append(self.windows[indice])
-        ###### Cambiar nombre de la imagen
-        self.windows[indice].showImage(self, self.windows[indice].getArray())
+        new = Window(self.windows[indice].getName() + "BN")
+        new.setArray(self.windows[indice].getArray)
+        self.windows.append(new)
+        self.windows[-1].showImage(self, self.windows[indice].getArray)
+        self.windows[-1].setValues(self.windows[indice].getArray)
 
     def show_info(self):
         indice = self.windowsStatus.index(True)
@@ -209,7 +210,7 @@ class basicMenubar(QMainWindow):
     def brightnessContrast(self):
         Slider(self)
         
-    # Intentando hacer una selección de una region de interes sin necesidad del raton
+    # Selección de una region de interes sin necesidad del raton
     def selectROI(self):
         indice = self.windowsStatus.index(True)
         imarray = self.windows[indice].getArray()
@@ -233,7 +234,7 @@ class basicMenubar(QMainWindow):
                 l += 1
             k += 1
 
-        newRoi = Window(self.windows[indice].getName() + '_ROI') ## Revisar para poner bien el nombre
+        newRoi = Window(self.windows[indice].getName() + '_ROI')
         newRoi.setArray(imarray2)
         self.windows.append(newRoi)
         self.windows[-1].showImage(self, imarray2)
@@ -279,7 +280,8 @@ class basicMenubar(QMainWindow):
                                             self.windows[-2].getHist(),
                                             self.windows[-1].getHist(), 
                                             self.windows[-2].getArray(),
-                                            self.windows[-1].getArray())
+                                            self.windows[-1].getArray(),
+                                            self.windows[-2].getName())
 
         newsection = Window(self.windows[-2].getName() + '_specification') ## Revisar para poner bien el nombre
         newsection.setArray(imarray2)

@@ -9,7 +9,7 @@ import numpy as np
 from histogram import histogram
 
 
-def histogramSpecification(hist1, histR, imarray1, imarrayR):
+def histogramSpecification(hist1, histR, imarray1, imarrayR, name):
   # Normalizar los histogramas
   hist1 = normalizar(hist1, imarray1)
   histR = normalizar(histR, imarrayR)
@@ -45,7 +45,7 @@ def histogramSpecification(hist1, histR, imarray1, imarrayR):
           arrayResult[x][y][1] = Vout
           arrayResult[x][y][2] = Vout
 
-  histresult = histogram(arrayResult, False, False, False)
+  histresult = histogram(arrayResult, False, False, False, name)
   histresult = acumulativo(histresult)
   histresult = normalizar(histresult, imarray1)
 

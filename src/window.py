@@ -120,7 +120,7 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         x = event.x()
         y = event.y()
         if x < self.arrayImage.shape[0] and y < self.arrayImage.shape[1] and x >= 0 and y >= 0:
-            self.main.statusBar().showMessage("X: " + str(x) + "    Y: " + str(y) + "   RGB:" + str(self.arrayImage[x][y]))
+            self.main.statusBar().showMessage("X: " + str(x) + "    Y: " + str(y) + "   RGB:" + str(self.arrayImage[y][x]))
 
     def setStatus(self, event):
         self.main.setFalse()
