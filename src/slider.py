@@ -11,16 +11,23 @@ class Slider(QWidget):
         hbox = QVBoxLayout()
 
         self.main = main
+        # Obtener el brillo y contraste de la imagen original
+        indice = self.main.windowsStatus.index(True)
+        self.main.windows[indice].brillo
+        self.brightness = round(self.main.windows[indice].brightness)
+        self.main.windows[indice].contraste
+        self.contrast = round(self.main.windows[indice].contrast)
 
         self.labelBright = QLabel('Brillo', self)
         self.labelBright.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.labelBright.setMinimumWidth(80)
-
+    
         self.mySlider = QSlider(Qt.Orientation.Horizontal, self)
         self.mySlider.setRange(0,255)
+        self.mySlider.setValue(self.brightness)
         self.mySlider.valueChanged[int].connect(self.changeBright)
 
-        self.label = QLabel('0', self)
+        self.label = QLabel(str(self.brightness), self)
         self.label.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.label.setMinimumWidth(80)
 
@@ -30,9 +37,10 @@ class Slider(QWidget):
 
         self.mySlider2 = QSlider(Qt.Orientation.Horizontal, self)
         self.mySlider2.setRange(0,127)
+        self.mySlider2.setValue(self.contrast)
         self.mySlider2.valueChanged[int].connect(self.changeContrast)
 
-        self.label2 = QLabel('0', self)
+        self.label2 = QLabel(str(self.contrast), self)
         self.label2.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.label2.setMinimumWidth(80)
 
@@ -70,6 +78,14 @@ class Slider(QWidget):
 
     def exit(self):
       self.close()
+
+    def setBrightness(self):
+      print("F -> "+ self.brightness)
+      indice = self.main.windowsStatus.index(True)
+      print("F -> "+ self.brightness)
+      self.brightness = self.main.windows[indice].brillo()
+      print("F -> "+ self.brightness)
+
 
     def calculate(self):
       indice = self.main.windowsStatus.index(True)
