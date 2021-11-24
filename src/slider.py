@@ -58,7 +58,7 @@ class Slider(QWidget):
         self.pushButton = QPushButton("Aceptar")
         self.pushButtonExit = QPushButton("Salir")
 
-        self.pushButton.clicked.connect(self.calculate) #Añadir un evento de clic para el botón
+        self.pushButton.clicked.connect(self.calculate)
         self.pushButtonExit.clicked.connect(self.exit)
 
         hbox.addWidget(self.pushButton)
@@ -93,7 +93,7 @@ class Slider(QWidget):
       newContrast = self.mySlider2.value()
       newArray = self.main.windows[indice].change(newBrightness, newContrast)
       
-      newRoi = Window(self.main.windows[indice].getName() + '_new')
+      newRoi = Window(self.main.windows[indice].getName() + '_new' + str(len(self.main.windows)))
       newRoi.setArray(newArray)
       self.main.windows.append(newRoi)
       self.main.windows[-1].showImage(self.main, newArray)

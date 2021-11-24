@@ -10,13 +10,6 @@ def entropy(hist, size):
    
     sumatoriohist = 0
     entropia = 0
-    numofcolors = 0
-
-    for i in range(256):
-      if hist[i] > 0:
-        numofcolors += 1
-
-    # print(numofcolors)
 
     for i in range(256):
       if hist[i] > 0:

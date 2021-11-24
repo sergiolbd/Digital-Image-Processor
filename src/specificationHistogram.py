@@ -45,30 +45,11 @@ def histogramSpecification(hist1, histR, imarray1, imarrayR, name):
           arrayResult[x][y][1] = Vout
           arrayResult[x][y][2] = Vout
 
-  histresult = histogram(arrayResult, False, False, False, name)
-  histresult = acumulativo(histresult)
-  histresult = normalizar(histresult, imarray1)
-
-  # Imprimimos los dos histogramas (referencia y resultado), los cuales deberían de ser iguales
-  printhist(histR, histresult)
+  # histresult = histogram(arrayResult, False, False, False, name)
+  # histresult = acumulativo(histresult)
+  # histresult = normalizar(histresult, imarray1)
 
   return arrayResult
-
-
-# Función para imprimir los dos histogramas que deberían de ser iguales
-def printhist(hist1, histR):
-  eje_x = range(256)
-  plot.bar(eje_x, hist1)
-  plot.xlabel('[0-255]')
-  plot.ylabel('Frecuencia absoluta')
-  plot.title('Histograma')
-  plot.show()
-
-  plot.bar(eje_x, histR)
-  plot.xlabel('[0-255]')
-  plot.ylabel('Frecuencia absoluta')
-  plot.title('Histograma')
-  plot.show()
 
 def normalizar(hist, imarray):
   for i in range(256):

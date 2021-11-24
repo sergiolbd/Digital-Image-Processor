@@ -54,13 +54,8 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         qimage = QImage(arrayImage, arrayImage.shape[1], arrayImage.shape[0], arrayImage.strides[0],                                                                                                                                                
                      QImage.Format_RGB888) 
         img = QLabel(self.nameImage)
-
-        # try:
-        #     imgFormat = Image.open(self.nameImage)
-        #     self.format = imgFormat.format
-        # except FileNotFoundError as e:
         
-        ## Mostrar posicion dek 
+        ## Mostrar posicion
         img.setMouseTracking(True)
         img.mouseMoveEvent = self.getPixel
         main.setFalse()
@@ -74,9 +69,6 @@ class Window(QWidget): # Añadir Qwindow para hacer el onClick
         main.addDockWidget(QtCore.Qt.DockWidgetArea.LeftDockWidgetArea, item)
         
     def change(self, newBrightness, newContrast):
-        # Hacer la LUT
-        # Se necesita la A y la B 
-        # A = contraste nuevo / contraste anterior
         A = newContrast / self.contrast
         B = newBrightness - (A * self.brightness)
 

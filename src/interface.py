@@ -1,13 +1,8 @@
 import math
-from PyQt5.QtCore import Qt
-from PyQt5 import QtGui
-from PyQt5.QtWidgets import QDockWidget, QLabel, QMainWindow, QAction, qApp, QApplication, QFileDialog, QWidget, QMenu, QMessageBox, QInputDialog, QSlider, QHBoxLayout
-from PyQt5.QtGui import QPixmap, QImage, QWindowStateChangeEvent
-from PIL import Image
+from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QFileDialog, QMenu, QMessageBox, QInputDialog
 import numpy as np
 
 import matplotlib.pyplot as plot
-from numpy.lib.function_base import append
 from histogram import histogram
 from newmonochrome import grayConversion
 from brightness import brightness
@@ -20,7 +15,6 @@ from gammaCorrection import correctionGamma
 from imageDifference import imageDifference
 from window import Window
 from slider import Slider
-import cv2
 
 class basicMenubar(QMainWindow):
     

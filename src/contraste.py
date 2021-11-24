@@ -10,7 +10,7 @@ def contrast(hist, size, brillo):
     sumatoriohist = 0
 
     for i in range(256):
-      sumatoriohist += hist[i] * (i - brillo)**2
+      sumatoriohist += float(hist[i]) * (i - float(brillo))**2
 
     contraste = (1/(height*width)) * sumatoriohist
 
