@@ -84,7 +84,7 @@ class basicMenubar(QMainWindow):
         gamma = QAction('Corrección Gamma', self)
         gamma.triggered.connect(self.gammaCorrection)
         difference = QMenu('Diferencia de imágenes', self)
-        distribution = QAction('Distribución de valores', self)
+        distribution = QAction('Distribución de valores/Imagen diferencia', self)
         distribution.triggered.connect(self.distributionValues)
         changeMap = QAction('Mapa de cambios', self)
         changeMap.triggered.connect(self.changeMap)
@@ -171,7 +171,7 @@ class basicMenubar(QMainWindow):
 
     def blancoYnegro(self):
         indice = self.windowsStatus.index(True)
-        new = Window(self.windows[indice].getName() + "BN")
+        new = Window(self.windows[indice].getName() + "BN" + str(len(self.windows)))
         new.setArray(self.windows[indice].getArray)
         self.windows.append(new)
         self.windows[-1].showImage(self, self.windows[indice].getArray)
@@ -228,7 +228,7 @@ class basicMenubar(QMainWindow):
                 l += 1
             k += 1
 
-        newRoi = Window(self.windows[indice].getName() + '_ROI')
+        newRoi = Window(self.windows[indice].getName() + '_ROI' + str(len(self.windows)))
         newRoi.setArray(imarray2)
         self.windows.append(newRoi)
         self.windows[-1].showImage(self, imarray2)
@@ -245,9 +245,18 @@ class basicMenubar(QMainWindow):
         points = []
         x = []
         y = []
-        for i in range(1,numofsections+1):
-            x1, ok = QInputDialog.getInt(self, "Tramo {} : x1".format(i), "x1:", 1, 0, 255)
-            y1, ok = QInputDialog.getInt(self, "Tramo {} : y1".format(i), "y1:", 1, 0, 255)
+        x1, ok = QInputDialog.getInt(self, "Tramo {} : x1".format(1), "x1:", 1, 0, 255)
+        y1, ok = QInputDialog.getInt(self, "Tramo {} : y1".format(1), "y1:", 1, 0, 255)
+        x2, ok = QInputDialog.getInt(self, "Tramo {} : x2".format(1), "x2:", 1, 0, 255)
+        y2, ok = QInputDialog.getInt(self, "Tramo {} : y2".format(1), "y2:", 1, 0, 255)
+        points.append(((x1,y1), (x2,y2)))
+        x.append(x1)
+        x.append(x2)
+        y.append(y1)
+        y.append(y2)
+        for i in range(2,numofsections+1):
+            x1 = x[-1]
+            y1 = y[-1]
             x2, ok = QInputDialog.getInt(self, "Tramo {} : x2".format(i), "x2:", 1, 0, 255)
             y2, ok = QInputDialog.getInt(self, "Tramo {} : y2".format(i), "y2:", 1, 0, 255)
             points.append(((x1,y1), (x2,y2)))
@@ -263,7 +272,7 @@ class basicMenubar(QMainWindow):
 
         imarray2 = sectionsLinearTrasformations(self.windows[indice].getArray(), numofsections, points)
         
-        newsection = Window(self.windows[indice].getName() + '_Sections') 
+        newsection = Window(self.windows[indice].getName() + '_Sections' + str(len(self.windows))) 
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
@@ -294,7 +303,7 @@ class basicMenubar(QMainWindow):
         indice = self.windowsStatus.index(True)
         imarray2 = histogramEqualize(self.windows[indice].getHist(), self.windows[indice].getArray())
 
-        newsection = Window(self.windows[indice].getName() + '_equalize')
+        newsection = Window(self.windows[indice].getName() + '_equalize' + str(len(self.windows)))
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
@@ -306,7 +315,7 @@ class basicMenubar(QMainWindow):
 
         imarray2 = correctionGamma(self.windows[indice].getHist(), self.windows[indice].getArray(), gammaValue)
 
-        newsection = Window(self.windows[indice].getName() + '_Gamma')
+        newsection = Window(self.windows[indice].getName() + '_Gamma' + str(len(self.windows)))
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
@@ -324,7 +333,7 @@ class basicMenubar(QMainWindow):
         
         imarray2 = imageDifference(image1.getArray(), image2.getArray(), T, False)
 
-        newsection = Window(self.windows[-1].getName() + 'Diference')
+        newsection = Window(self.windows[indice].getName() + 'MapaCambios' + str(len(self.windows)))
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
@@ -338,7 +347,12 @@ class basicMenubar(QMainWindow):
         self.newImagen(fileImage)
         image2 = self.windows[-1]
         
-        imageDifference(image1.getArray(), image2.getArray(), 0, True)
+        imarray2 = imageDifference(image1.getArray(), image2.getArray(), 0, True)
+        newsection = Window(self.windows[indice].getName() + 'Diference' + str(len(self.windows)))
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
                
     # Pone como no principales todas las ventanas
     def setFalse(self):
