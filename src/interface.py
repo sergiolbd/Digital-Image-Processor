@@ -269,21 +269,28 @@ class basicMenubar(QMainWindow):
 
         imarray2 = sectionsLinearTrasformations(self.windows[indice].getArray(), numofsections, points)
         
-        newsection = Window(self.windows[indice].getName() + '_Sections') ## Revisar para poner bien el nombre
+        newsection = Window(self.windows[indice].getName() + '_Sections') 
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2)
 
-    def specification(self):###################### Revisar como poner los indices
+    def specification(self):
+        # Extraccion de las imagenes
+        indice = self.windowsStatus.index(True)
+        image1 = self.windows[indice]
+        fileImage, ok = QFileDialog.getOpenFileName(self, 'Select Image...', "../Images/")
+        self.newImagen(fileImage)
+        image2 = self.windows[-1]
+        
         imarray2 = histogramSpecification(
-                                            self.windows[-2].getHist(),
-                                            self.windows[-1].getHist(), 
-                                            self.windows[-2].getArray(),
-                                            self.windows[-1].getArray(),
-                                            self.windows[-2].getName())
+                                            image1.getHist(),
+                                            image2.getHist(), 
+                                            image1.getArray(),
+                                            image2.getArray(),
+                                            image1.getName())
 
-        newsection = Window(self.windows[-2].getName() + '_specification') ## Revisar para poner bien el nombre
+        newsection = Window(image1.getName() + '_specification') 
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
@@ -293,7 +300,7 @@ class basicMenubar(QMainWindow):
         indice = self.windowsStatus.index(True)
         imarray2 = histogramEqualize(self.windows[indice].getHist(), self.windows[indice].getArray())
 
-        newsection = Window(self.windows[indice].getName() + '_equalize') ## Revisar para poner bien el nombre
+        newsection = Window(self.windows[indice].getName() + '_equalize')
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
@@ -305,7 +312,7 @@ class basicMenubar(QMainWindow):
 
         imarray2 = correctionGamma(self.windows[indice].getHist(), self.windows[indice].getArray(), gammaValue)
 
-        newsection = Window(self.windows[indice].getName() + '_Gamma') ## Revisar para poner bien el nombre
+        newsection = Window(self.windows[indice].getName() + '_Gamma')
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
@@ -322,7 +329,6 @@ class basicMenubar(QMainWindow):
         T, ok = QInputDialog.getInt(self, "T", "T:", 1, 0, 255)
         
         imarray2 = imageDifference(image1.getArray(), image2.getArray(), T, False)
-        # imarray2 = imageDifference(self.windows[-2].getArray(), self.windows[-1].getArray(), T, False)
 
         newsection = Window(self.windows[-1].getName() + 'Diference')
         newsection.setArray(imarray2)
