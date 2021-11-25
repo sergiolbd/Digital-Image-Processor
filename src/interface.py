@@ -174,8 +174,8 @@ class basicMenubar(QMainWindow):
         new = Window(self.windows[indice].getName() + "BN" + str(len(self.windows)))
         new.setArray(self.windows[indice].getArray)
         self.windows.append(new)
-        self.windows[-1].showImage(self, self.windows[indice].getArray)
-        self.windows[-1].setValues(self.windows[indice].getArray)
+        self.windows[-1].showImage(self, self.windows[indice].getArray())
+        self.windows[-1].setValues(self.windows[indice].getArray())
 
     def show_info(self):
         indice = self.windowsStatus.index(True)
