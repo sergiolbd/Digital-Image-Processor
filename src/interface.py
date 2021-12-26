@@ -4,6 +4,7 @@ import numpy as np
 
 import matplotlib.pyplot as plot
 from histogram import histogram
+from horizontally import flip
 from newmonochrome import grayConversion
 from brightness import brightness
 from contraste import contrast
@@ -65,7 +66,7 @@ class basicMenubar(QMainWindow):
         ROIAction.triggered.connect(self.selectROI)
 
         # Transformaciones lineales
-        new_submenu2 = QMenu('Transformaciones lineales', self)
+        new_submenu2 = QMenu('Linear transformations', self)
         brillo_contraste = QAction('Brillo/Contraste', self)
         brillo_contraste.triggered.connect(self.brightnessContrast)
         portramos = QAction('Por tramos', self)
@@ -76,7 +77,7 @@ class basicMenubar(QMainWindow):
         new_submenu2.addAction(portramos)
 
         # Transformaciones no lineales
-        new_submenu3 = QMenu('Transformaciones no lineales', self)
+        new_submenu3 = QMenu('Nonlinear transformations', self)
         esp_hist = QAction('Especificación del histograma', self)
         esp_hist.triggered.connect(self.specification)
         ecualizacion = QAction('Ecualización del histograma', self)
@@ -96,12 +97,26 @@ class basicMenubar(QMainWindow):
         difference.addAction(changeMap)
         new_submenu3.addMenu(difference)
 
+        # Transformaciones
+        new_submenu4 = QMenu('Transform', self)
+        horizontally = QAction('Flip Horizontally', self)
+        horizontally.triggered.connect(self.flipHorizontally)
+        vertically = QAction('Flip Vertically', self)
+        vertically.triggered.connect(self.flipVertically)
+        transposed = QAction('Transposed', self)
+        transposed.triggered.connect(self.transposed)
+
+        new_submenu4.addAction(horizontally)
+        new_submenu4.addAction(vertically)
+        new_submenu4.addAction(transposed)
+
         menubar2 = self.menuBar()
         fileMenu2 = menubar2.addMenu('&Edit')
         fileMenu2.addAction(copyAction)
         fileMenu2.addAction(ROIAction)
         fileMenu2.addMenu(new_submenu2)
         fileMenu2.addMenu(new_submenu3)
+        fileMenu2.addMenu(new_submenu4)
 
         #--------------------Image-------------------------
 
@@ -358,3 +373,38 @@ class basicMenubar(QMainWindow):
     def setFalse(self):
         for i in range(len(self.windowsStatus)):
             self.windowsStatus[i] = False
+
+
+            # ------------------------------- Práctica 2 ------------------------------
+    def flipHorizontally(self):
+        indice = self.windowsStatus.index(True)
+
+        imarray2 = flip(self.windows[indice].getArray(), 'H')
+        
+        newsection = Window(self.windows[indice].getName() + 'Flip Horizontally' + str(len(self.windows))) 
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
+
+    def flipVertically(self):
+        indice = self.windowsStatus.index(True)
+
+        imarray2 = flip(self.windows[indice].getArray(), 'V')
+        
+        newsection = Window(self.windows[indice].getName() + 'Flip Vertically' + str(len(self.windows))) 
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
+
+    def transposed(self):
+        indice = self.windowsStatus.index(True)
+
+        imarray2 = flip(self.windows[indice].getArray(), 'T')
+        
+        newsection = Window(self.windows[indice].getName() + 'Transposed' + str(len(self.windows))) 
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)  
