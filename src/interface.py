@@ -9,6 +9,7 @@ from newmonochrome import grayConversion
 from brightness import brightness
 from contraste import contrast
 from entropia import entropy
+from rotate import rotate
 from sections_linear_tansformations import sectionsLinearTrasformations
 from specificationHistogram import histogramSpecification
 from ecualizehistogram import histogramEqualize
@@ -105,10 +106,21 @@ class basicMenubar(QMainWindow):
         vertically.triggered.connect(self.flipVertically)
         transposed = QAction('Transposed', self)
         transposed.triggered.connect(self.transposed)
+        new_submenu5 = QMenu('Rotate', self)
+        rotate90 = QAction('90º', self)
+        rotate90.triggered.connect(lambda:self.rotate(90))
+        rotate180 = QAction('180º', self)
+        rotate180.triggered.connect(lambda:self.rotate(180))
+        rotate270 = QAction('270º', self)
+        rotate270.triggered.connect(lambda:self.rotate(270))
+        new_submenu5.addAction(rotate90)
+        new_submenu5.addAction(rotate180)
+        new_submenu5.addAction(rotate270)
 
         new_submenu4.addAction(horizontally)
         new_submenu4.addAction(vertically)
         new_submenu4.addAction(transposed)
+        new_submenu4.addMenu(new_submenu5)
 
         menubar2 = self.menuBar()
         fileMenu2 = menubar2.addMenu('&Edit')
@@ -407,4 +419,23 @@ class basicMenubar(QMainWindow):
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
-        self.windows[-1].setValues(imarray2)  
+        self.windows[-1].setValues(imarray2) 
+
+    def rotate(self, degree):
+        indice = self.windowsStatus.index(True)
+
+        if degree == 90:
+            imarray2 = rotate(self.windows[indice].getArray())
+        elif degree == 180:
+            imarray2 = rotate(self.windows[indice].getArray())
+            imarray2 = rotate(imarray2)
+        elif degree == 270:
+            imarray2 = rotate(self.windows[indice].getArray())
+            imarray2 = rotate(imarray2)
+            imarray2 = rotate(imarray2)
+        
+        newsection = Window(self.windows[indice].getName() + 'Transposed' + str(len(self.windows))) 
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2) 
