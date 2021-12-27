@@ -10,6 +10,7 @@ from brightness import brightness
 from contraste import contrast
 from entropia import entropy
 from rotate import rotate
+from scalling import scallingTransform
 from sections_linear_tansformations import sectionsLinearTrasformations
 from specificationHistogram import histogramSpecification
 from ecualizehistogram import histogramEqualize
@@ -122,6 +123,17 @@ class basicMenubar(QMainWindow):
         new_submenu4.addAction(transposed)
         new_submenu4.addMenu(new_submenu5)
 
+        # Transformación de escalado
+        new_submenu6 = QMenu('Scalling transformations', self)
+        neighbor = QAction('Interpolación del vecino más próximo', self)
+        neighbor.triggered.connect(lambda:self.scalling(True))
+        bilinear = QAction('Interpolación bilineal', self)
+        bilinear.triggered.connect(lambda:self.scalling(False))
+
+        new_submenu6.addAction(neighbor)
+        new_submenu6.addAction(bilinear)
+    
+
         menubar2 = self.menuBar()
         fileMenu2 = menubar2.addMenu('&Edit')
         fileMenu2.addAction(copyAction)
@@ -129,6 +141,7 @@ class basicMenubar(QMainWindow):
         fileMenu2.addMenu(new_submenu2)
         fileMenu2.addMenu(new_submenu3)
         fileMenu2.addMenu(new_submenu4)
+        fileMenu2.addMenu(new_submenu6)
 
         #--------------------Image-------------------------
 
@@ -432,9 +445,26 @@ class basicMenubar(QMainWindow):
         elif degree == 270:
             imarray2 = rotate(self.windows[indice].getArray())
             imarray2 = rotate(imarray2)
-            imarray2 = rotate(imarray2)
-        
+            imarray2 = rotate(imarray2)        
+
         newsection = Window(self.windows[indice].getName() + 'Transposed' + str(len(self.windows))) 
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2) 
+
+    def scalling(self, flag):
+        indice = self.windowsStatus.index(True)
+        imarray = self.windows[indice].getArray()
+        x = imarray.shape[1]
+        y = imarray.shape[0]
+
+        width, ok = QInputDialog.getInt(self, "Size x", "X:", x, 0, x * 5)
+        height, ok = QInputDialog.getInt(self, "Size y", "Y:", y, 0, y * 5)
+
+        imarray2 = scallingTransform(self.windows[indice].getArray(), height, width, flag)
+        
+        newsection = Window(self.windows[indice].getName() + 'Scalling Transform' + str(len(self.windows))) 
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
