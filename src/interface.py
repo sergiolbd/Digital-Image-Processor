@@ -10,6 +10,7 @@ from brightness import brightness
 from contraste import contrast
 from entropia import entropy
 from rotate import rotate
+from rotation import rotation
 from scalling import scallingTransform
 from sections_linear_tansformations import sectionsLinearTrasformations
 from specificationHistogram import histogramSpecification
@@ -132,7 +133,14 @@ class basicMenubar(QMainWindow):
 
         new_submenu6.addAction(neighbor)
         new_submenu6.addAction(bilinear)
-    
+
+        # Transformaciones de rotación
+        new_submenu7 = QMenu('Rotation transformations', self)
+        rotate = QAction('Rotate', self)
+        rotate.triggered.connect(self.rotationTransformation)
+
+        new_submenu7.addAction(rotate)
+ 
 
         menubar2 = self.menuBar()
         fileMenu2 = menubar2.addMenu('&Edit')
@@ -142,6 +150,7 @@ class basicMenubar(QMainWindow):
         fileMenu2.addMenu(new_submenu3)
         fileMenu2.addMenu(new_submenu4)
         fileMenu2.addMenu(new_submenu6)
+        fileMenu2.addMenu(new_submenu7)
 
         #--------------------Image-------------------------
 
@@ -465,6 +474,20 @@ class basicMenubar(QMainWindow):
         imarray2 = scallingTransform(self.windows[indice].getArray(), height, width, flag)
         
         newsection = Window(self.windows[indice].getName() + 'Scalling Transform' + str(len(self.windows))) 
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2) 
+    
+    def rotationTransformation(self):
+        indice = self.windowsStatus.index(True)
+        imarray = self.windows[indice].getArray()
+
+        angle, ok = QInputDialog.getInt(self, "Rotate", "Angle:", -360, 0, 360)
+
+        imarray2 = rotation(self.windows[indice].getArray(), angle)
+        
+        newsection = Window(self.windows[indice].getName() + 'Rotation Transformation' + str(len(self.windows))) 
         newsection.setArray(imarray2)
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
