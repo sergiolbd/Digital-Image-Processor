@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QFileDialog, QMenu, QMes
 import numpy as np
 
 import matplotlib.pyplot as plot
+from drawRotation import drawRotation
 from histogram import histogram
 from horizontally import flip
 from newmonochrome import grayConversion
@@ -138,8 +139,11 @@ class basicMenubar(QMainWindow):
         new_submenu7 = QMenu('Rotation transformations', self)
         rotate = QAction('Rotate', self)
         rotate.triggered.connect(self.rotationTransformation)
+        drawAndRotate = QAction('Rotar y Pintar', self)
+        drawAndRotate.triggered.connect(self.drawRotate)
 
         new_submenu7.addAction(rotate)
+        new_submenu7.addAction(drawAndRotate)
  
 
         menubar2 = self.menuBar()
@@ -481,7 +485,6 @@ class basicMenubar(QMainWindow):
     
     def rotationTransformation(self):
         indice = self.windowsStatus.index(True)
-        imarray = self.windows[indice].getArray()
 
         angle, ok = QInputDialog.getInt(self, "Rotate", "Angle:", -360, 0, 360)
 
@@ -492,3 +495,16 @@ class basicMenubar(QMainWindow):
         self.windows.append(newsection)
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2) 
+
+    def drawRotate(self):
+        indice = self.windowsStatus.index(True)
+
+        angle, ok = QInputDialog.getInt(self, "Rotate", "Angle:", -360, 0, 360)
+
+        imarray2 = drawRotation(self.windows[indice].getArray(), angle)
+        
+        newsection = Window(self.windows[indice].getName() + 'Rotation Transformation' + str(len(self.windows))) 
+        newsection.setArray(imarray2)
+        self.windows.append(newsection)
+        self.windows[-1].showImage(self, imarray2)
+        self.windows[-1].setValues(imarray2)
