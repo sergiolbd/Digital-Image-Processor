@@ -137,12 +137,17 @@ class basicMenubar(QMainWindow):
 
         # Transformaciones de rotación
         new_submenu7 = QMenu('Rotation transformations', self)
-        rotate = QAction('Rotate', self)
-        rotate.triggered.connect(self.rotationTransformation)
+        rotate = QMenu('Rotate', self)
+        rotateNeighbor = QAction('Vecino más próximo', self)
+        rotateNeighbor.triggered.connect(lambda:self.rotationTransformation(True))
+        rotateBilinear = QAction('Bilineal', self)
+        rotateBilinear.triggered.connect(lambda:self.rotationTransformation(False))
         drawAndRotate = QAction('Rotar y Pintar', self)
         drawAndRotate.triggered.connect(self.drawRotate)
 
-        new_submenu7.addAction(rotate)
+        new_submenu7.addMenu(rotate)
+        rotate.addAction(rotateNeighbor)
+        rotate.addAction(rotateBilinear)
         new_submenu7.addAction(drawAndRotate)
  
 
@@ -483,12 +488,12 @@ class basicMenubar(QMainWindow):
         self.windows[-1].showImage(self, imarray2)
         self.windows[-1].setValues(imarray2) 
     
-    def rotationTransformation(self):
+    def rotationTransformation(self, flag):
         indice = self.windowsStatus.index(True)
 
         angle, ok = QInputDialog.getInt(self, "Rotate", "Angle:", -360, 0, 360)
 
-        imarray2 = rotation(self.windows[indice].getArray(), angle)
+        imarray2 = rotation(self.windows[indice].getArray(), angle, flag)
         
         newsection = Window(self.windows[indice].getName() + 'Rotation Transformation' + str(len(self.windows))) 
         newsection.setArray(imarray2)
