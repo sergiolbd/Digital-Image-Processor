@@ -64,8 +64,6 @@ def rotation(imarray, angle, flag):
       # if indiceX == 20 and indiceY == 50: 
       #   print(x, y)
 
-      # HASTA AQUI FUNCIONA TODO IGUAL QUE EN LA ULTIMA TRANSPARENCIA DE LOS APUNTES
-
       # Contador para los x,y de la imagen original que den x', y' de la imagen rotada, cuyos x,y esten fuera de
       # de la imagen original
 

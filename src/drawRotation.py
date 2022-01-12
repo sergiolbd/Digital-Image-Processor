@@ -32,27 +32,52 @@ def drawRotation(imarray, angle):
   T = [minX, minY]
 
   # Asignar nivel de gris a los indices del array usando interpolacion del vecino más próximo
-  imarray2 = np.zeros([sizeX+1, sizeY+1, channel], np.uint8)
+  imarray2 = np.zeros([sizeY, sizeX, channel], np.uint8)
 
   # Contador para el número de pixeles que se van fuera
   count = 0
 
+  print(E0, F0, G0, H0)
+  print(T)
+
+  # for indiceX in range(0, sizeX):
+  #   for indiceY in range(0, sizeY):
+
+  #     x0 = indiceX + T[0]
+  #     y0 = indiceY + T[1]
+
+  #     P0 = np.array([round(x0, 2), round(y0, 2)])
+
+  #     [x, y] = np.dot(R(-angle), P0)
+  #     x = round(x, 2)
+  #     y = round(y, 2)
+
+  #     if x >= width or x < 0 or y >= height or y < 0:
+  #       imarray2[indiceY][indiceX] = 255
+  #       count += 1
+  #     else:
+  #       imarray2[indiceY][indiceX] = 0
+
   for indiceX in range(0, width):
     for indiceY in range(0, height):
+
       P0 = np.array([indiceX, indiceY])
 
-      [x, y] = np.dot(R(angle), P0)
-      x = round(x)
-      y = round(y)
+      [x0, y0] = np.dot(R(angle), P0)
+      x0 = x0 - T[0]
+      y0 = y0 - T[1]
+      x0 = round(x0)
+      y0 = round(y0)
 
-      if x >= width or x < 0 or y >= height or y < 0:
-        imarray2[x][y] = 255
+      # if imarray2[y0][x0][0] == 255:
+      if x0 >= width or x0 < 0 or y0 >= height or y0 < 0:
+        imarray2[y0][x0] = 255
         count += 1
       else: 
-        imarray2[x][y] = imarray[indiceX][indiceY]
+        imarray2[y0][x0] = imarray[indiceY][indiceX]
 
       # Para comparar histogramas si pusimos el fondo a negro, este histrograma se obtiene obteniendo el histograma y restando al
-      # indice 0 del histograma el valor del contador 
+      # indice 0 del histograma el valor del contador Z
 
   return imarray2
 
