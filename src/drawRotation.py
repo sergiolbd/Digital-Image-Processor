@@ -1,7 +1,9 @@
-from math import cos, pi, sin, ceil
+from math import cos, pi, sin, ceil, trunc
 import matplotlib.pyplot as plot
 from PIL import Image
 import numpy as np
+
+from histogram import histogram
 
 def drawRotation(imarray, angle):
     
@@ -37,27 +39,6 @@ def drawRotation(imarray, angle):
   # Contador para el número de pixeles que se van fuera
   count = 0
 
-  print(E0, F0, G0, H0)
-  print(T)
-
-  # for indiceX in range(0, sizeX):
-  #   for indiceY in range(0, sizeY):
-
-  #     x0 = indiceX + T[0]
-  #     y0 = indiceY + T[1]
-
-  #     P0 = np.array([round(x0, 2), round(y0, 2)])
-
-  #     [x, y] = np.dot(R(-angle), P0)
-  #     x = round(x, 2)
-  #     y = round(y, 2)
-
-  #     if x >= width or x < 0 or y >= height or y < 0:
-  #       imarray2[indiceY][indiceX] = 255
-  #       count += 1
-  #     else:
-  #       imarray2[indiceY][indiceX] = 0
-
   for indiceX in range(0, width):
     for indiceY in range(0, height):
 
@@ -66,18 +47,26 @@ def drawRotation(imarray, angle):
       [x0, y0] = np.dot(R(angle), P0)
       x0 = x0 - T[0]
       y0 = y0 - T[1]
-      x0 = round(x0)
-      y0 = round(y0)
+      x0 = trunc(x0)
+      y0 = trunc(y0)
 
-      # if imarray2[y0][x0][0] == 255:
-      if x0 >= width or x0 < 0 or y0 >= height or y0 < 0:
-        imarray2[y0][x0] = 255
-        count += 1
-      else: 
-        imarray2[y0][x0] = imarray[indiceY][indiceX]
+      if imarray[indiceY][indiceX][0] == 0:
+        count += 1 
+      imarray2[y0][x0] = imarray[indiceY][indiceX]
 
-      # Para comparar histogramas si pusimos el fondo a negro, este histrograma se obtiene obteniendo el histograma y restando al
-      # indice 0 del histograma el valor del contador Z
+  print(count)
+  # Obtener histograma
+  hist = histogram(imarray2, False, False, False, "Con Fondo")
+  black = hist[0] - count #Negros fuera de la imagen rotada
+  hist[0] -= black
+     
+  eje_x = range(256)
+  plot.figure("Sin Fondo")
+  plot.bar(eje_x, hist)
+  plot.xlabel('Vin[0-255]')
+  plot.ylabel('h(i)')
+  plot.title('Histograma')
+  plot.show()
 
   return imarray2
 

@@ -3,6 +3,8 @@ import matplotlib.pyplot as plot
 from PIL import Image
 import numpy as np
 
+from histogram import histogram
+
 def rotation(imarray, angle, flag):
     
   height, width, channel = imarray.shape
@@ -61,15 +63,8 @@ def rotation(imarray, angle, flag):
       y = round(y, 2)
 
 
-      # if indiceX == 20 and indiceY == 50: 
-      #   print(x, y)
-
-      # Contador para los x,y de la imagen original que den x', y' de la imagen rotada, cuyos x,y esten fuera de
-      # de la imagen original
-
       # Si x o y esta fuera de la imagen original => se el asigna color fondo = negro
       if x >= width or x < 0 or y >= height or y < 0:
-        imarray2[indiceY][indiceX] = 255
         count += 1
       elif flag == True: 
         # Vecino más próximo
@@ -113,7 +108,18 @@ def rotation(imarray, angle, flag):
         imarray2[indiceY][indiceX] = np.uint8(pp)
 
       # Para comparar histogramas si pusimos el fondo a negro, este histrograma se obtiene obteniendo el histograma y restando al
-      # indice 0 del histograma el valor del contador 
+      # indice 0 del histograma el valor del contador
+  hist = histogram(imarray2, False, False, False, "Con Fondo")
+  
+  hist[0] -= count 
+
+  eje_x = range(256)
+  plot.figure("Sin Fondo")
+  plot.bar(eje_x, hist)
+  plot.xlabel('Vin[0-255]')
+  plot.ylabel('h(i)')
+  plot.title('Histograma')
+  plot.show()
 
   return imarray2
 

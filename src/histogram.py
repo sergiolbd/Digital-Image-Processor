@@ -53,7 +53,7 @@ def histogram(imagearray, normalized, cumulative, show, name):
         if i-1 >= 0:
           hist[i] += hist[i-1]
         else:
-            hist[i] = hist[i]
+          hist[i] = hist[i]
 
       plot.figure(name + "Acumulado")
       plot.bar(eje_x, hist)
