@@ -4,7 +4,6 @@ import numpy as np
 
 def sectionsLinearTrasformations(arrayImage, numofsections, x):
   
-
   lut = []
   # Obtener pendiente de las rectas
   for i in range(numofsections): 

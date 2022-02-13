@@ -54,7 +54,6 @@ def drawRotation(imarray, angle):
         count += 1 
       imarray2[y0][x0] = imarray[indiceY][indiceX]
 
-  print(count)
   # Obtener histograma
   hist = histogram(imarray2, False, False, False, "Con Fondo")
   black = hist[0] - count #Negros fuera de la imagen rotada
